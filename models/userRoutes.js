@@ -1,15 +1,34 @@
 const express = require('express');
 const router = express.Router();
 const { User } = require('../models');
+const bcrypt = require('bcrypt');
+const saltRounds = 10;
 
 // Registration endpoint
 router.post('/register', async (req, res) => {
   try {
-    const { username } = req.body;
-    const newUser = await User.create({ username });
-    res.json(newUser);
+    const { username, password } = req.body;
+    const hashedPassword = await bcrypt.hash(password, saltRounds);
+    const newUser = await User.create({ username, password: hashedPassword });
+    res.json({ id: newUser.id, username: newUser.username });
   } catch (error) {
     res.status(400).send(error.message);
+  }
+});
+
+// Login endpoint
+router.post('/login', async (req, res) => {
+  try {
+    const { username, password } = req.body;
+    const user = await User.findOne({ where: { username } });
+    if (user && await bcrypt.compare(password, user.password)) {
+      res.json({ message: "Login successful" });
+      // Proceed with session/token generation as per your auth strategy
+    } else {
+      res.status(401).send('Invalid username or password');
+    }
+  } catch (error) {
+    res.status(500).send(error.message);
   }
 });
 
@@ -23,12 +42,5 @@ router.get('/', async (req, res) => {
   }
 });
 
-
-// Login endpoint (simplified for demonstration)
-router.post('/login', async (req, res) => {
-  // Implement login logic here
-  // This is a placeholder for demonstration purposes
-  res.send('Login endpoint');
-});
 
 module.exports = router;

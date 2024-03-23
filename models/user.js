@@ -5,6 +5,10 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false,
       unique: true,
     },
+    password: { // Add a password field
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
     isVerified: {
       type: DataTypes.BOOLEAN,
       defaultValue: false,
