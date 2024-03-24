@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const { User } = require('../models');
+const { users } = require('../models');
 const bcrypt = require('bcrypt');
 const saltRounds = 10;
 
@@ -8,13 +8,16 @@ const saltRounds = 10;
 router.post('/register', async (req, res) => {
   try {
     const { username, password } = req.body;
-    const hashedPassword = await bcrypt.hash(password, saltRounds);
-    const newUser = await User.create({ username, password: hashedPassword });
+    const newUser = await users.create({ username: username, password: password });
     res.json({ id: newUser.id, username: newUser.username });
+
+
   } catch (error) {
     res.status(400).send(error.message);
   }
 });
+
+
 
 // Login endpoint
 router.post('/login', async (req, res) => {
