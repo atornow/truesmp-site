@@ -2,10 +2,10 @@ version: '3.8'
 services:
   backend:
     build:
-      context: .
+      context: ./server
       dockerfile: Dockerfile
     volumes:
-      - ./:/app
+      - ./server:/app
     ports:
       - "3001:3001"
     environment:
