@@ -4,6 +4,7 @@ const { users } = require('../models');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const saltRounds = 10;
+const { getTotalMined } = require('../scripts/coreProtectDataAggregator');
 
 // Registration endpoint
 router.post('/register', async (req, res) => {
@@ -12,17 +13,21 @@ router.post('/register', async (req, res) => {
     // Hash the password before saving it to the database
     const hashedPassword = await bcrypt.hash(password, saltRounds);
     const newUser = await users.create({ username: username, password: hashedPassword });
-    // Return only the public information
+    const totalDirtMined = await getTotalMined(newUser.username, 'minecraft:dirt');
+    const totalDiamondsMined = await getTotalMined(newUser.username, 'minecraft:deepslate_diamond_ore');
+    newUser.update({ totalDirtMined });
+    newUser.update({ totalDiamondsMined });
     res.json({ id: newUser.id, username: newUser.username });
+
   } catch (error) {
     res.status(400).send(error.message);
   }
 });
 
 const authenticateToken = (req, res, next) => {
-  const authHeader = req.headers['authorization'];
+  const authHeader = req.headers['Authorization'];
   const token = authHeader && authHeader.split(' ')[1]; // Extract the token
-  if (token == null) return res.sendStatus(401); // if there isn't any token
+  if (token == null) return res.sendStatus(411); // if there isn't any token
 
   jwt.verify(token, jwtSecret, (err, user) => {
     if (err) return res.sendStatus(403); // if the token has expired or is invalid
@@ -62,13 +67,27 @@ router.post('/login', async (req, res) => {
   }
 });
 
-// Get all users
-router.get('/', async (req, res) => {
+// Post user stats for a specific user
+router.post('/stats', async (req, res) => {
   try {
-    const users = await User.findAll();
-    res.json(users);
+    const { username } = req.body;
+    // Ensure that the username from the token matches the requested username
+    const user = await users.findOne({
+      where: { username: username },
+      attributes: ['totalDirtMined', 'totalDiamondsMined'] // Specify any other attributes you may need
+    });
+
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    res.json({
+      totalDirtMined: user.totalDirtMined,
+      totalDiamondsMined: user.totalDiamondsMined
+    });
   } catch (error) {
-    res.status(400).send(error.message);
+    console.error('Error fetching user stats:', error);
+    res.status(500).json({ message: 'Internal server error' });
   }
 });
 

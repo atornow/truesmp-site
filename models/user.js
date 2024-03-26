@@ -13,6 +13,14 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.BOOLEAN,
       defaultValue: false,
     },
+    totalDirtMined: {
+      type: DataTypes.INTEGER,
+      defaultValue: 0,
+    },
+    totalDiamondsMined: {
+      type: DataTypes.INTEGER,
+      defaultValue: 0,
+        },
     // Add other fields as needed
   });
 
