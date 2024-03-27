@@ -50,7 +50,7 @@ router.post('/register', async (req, res) => {
 });
 
 // Secret key for signing JWT, should be stored in environment variable
-const jwtSecret = process.env.JWT_SECRET || 'fjsdfhjFDgh4242';
+const jwtSecret = process.env.JWT_SECRET;
 
 // Login endpoint
 router.post('/login', async (req, res) => {
