@@ -5,11 +5,14 @@ services:
       context: ./server
       dockerfile: Dockerfile
     volumes:
-      - ./server:/app
+      - ./server:/usr/src/app
+      - /usr/src/app/node_modules
     ports:
       - "3001:3001"
     env_file:
       - main.env
+    environment:
+      - NODE_ENV=development
     networks:
       - app-network
     depends_on:
@@ -38,12 +41,13 @@ services:
     ports:
       - "5432:5432"
     volumes:
-      - dbt1-data:/var/lib/postgresql/data
+      - dbt2-data:/var/lib/postgresql/data
     networks:
       - app-network
 
 volumes:
-  dbt1-data:
+  dbt2-data:
+  backend_data:
 
 networks:
   app-network:

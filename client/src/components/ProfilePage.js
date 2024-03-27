@@ -14,6 +14,7 @@ function ProfilePage() {
   const [selectedBlockType, setSelectedBlockType] = useState('totalDirtMined');
   const [topMiners, setTopMiners] = useState([]);
 
+
   useEffect(() => {
     const fetchTopMiners = async () => {
       try {

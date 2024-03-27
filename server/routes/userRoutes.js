@@ -6,6 +6,8 @@ const crypto = require('crypto');
 const jwt = require('jsonwebtoken');
 const saltRounds = 10;
 const { getTotalMined } = require('../scripts/coreProtectDataAggregator');
+const jwtSecret = process.env.JWT_SECRET;
+
 
 // Setup auth token for using protected route to talk to frontend
 const authenticateToken = (req, res, next) => {
@@ -25,12 +27,13 @@ router.get('/protected-route', authenticateToken, (req, res) => {
 
 });
 
+// Registration endpoint, generates token and expiration time and creates temp user.
 router.post('/register', async (req, res) => {
   try {
     const { username, password } = req.body;
     const hashedPassword = await bcrypt.hash(password, saltRounds);
 
-    const verificationToken = crypto.randomBytes(20).toString('hex');
+    const verificationToken = crypto.randomBytes(3).toString('hex');
     const verificationExpires = Date.now() + 300000; // Token expires in 5 min
 
     const newUser = await users.create({
@@ -41,16 +44,15 @@ router.post('/register', async (req, res) => {
     });
 
     res.json({
-      message: 'Registration successful. Please run /verify in-game within 5 minutes to complete the verification process.',
+      message: 'Please run /verify in-game within 5 minutes to link account.',
       token: verificationToken,
+      username: username,
     });
   } catch (error) {
     res.status(400).send(error.message);
   }
 });
 
-// Secret key for signing JWT, should be stored in environment variable
-const jwtSecret = process.env.JWT_SECRET;
 
 // Login endpoint
 router.post('/login', async (req, res) => {
@@ -75,29 +77,6 @@ router.post('/login', async (req, res) => {
   }
 });
 
-// Post user stats for a specific user
-router.post('/stats', async (req, res) => {
-  try {
-    const { username } = req.body;
-    // Ensure that the username from the token matches the requested username
-    const user = await users.findOne({
-      where: { username: username },
-      attributes: ['totalDirtMined', 'totalDiamondsMined'] // Specify any other attributes you may need
-    });
-
-    if (!user) {
-      return res.status(404).json({ message: 'User not found' });
-    }
-
-    res.json({
-      totalDirtMined: user.totalDirtMined,
-      totalDiamondsMined: user.totalDiamondsMined
-    });
-  } catch (error) {
-    console.error('Error fetching user stats:', error);
-    res.status(500).json({ message: 'Internal server error' });
-  }
-});
 
 router.get('/top-miners/:blockType', async (req, res) => {
   try {
@@ -113,6 +92,7 @@ router.get('/top-miners/:blockType', async (req, res) => {
     res.status(500).json({ message: 'Internal server error' });
   }
 });
+
 
 router.post('/verify', async (req, res) => {
   try {
@@ -131,6 +111,27 @@ router.post('/verify', async (req, res) => {
     }
   } catch (error) {
     console.error('Error handling verification request:', error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+});
+
+router.get('/check-verification/:username', async (req, res) => {
+  try {
+    const { username } = req.params;
+    const user = await users.findOne({ where: { username } });
+
+    if (user && user.isVerified) {
+      const token = jwt.sign(
+        { userId: user.id, username: user.username },
+        jwtSecret,
+        { expiresIn: '24h' }
+      );
+      res.json({ isVerified: true, token });
+    } else {
+      res.json({ isVerified: false });
+    }
+  } catch (error) {
+    console.error('Error checking verification:', error);
     res.status(500).json({ message: 'Internal server error' });
   }
 });
