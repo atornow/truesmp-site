@@ -10,7 +10,7 @@ function VerificationPage() {
   useEffect(() => {
     const checkVerification = async () => {
       try {
-        const response = await axios.get(`http://73.63.150.254:3001/api/users/check-verification/${username}`);
+        const response = await axios.get(`http://localhost:3001/api/users/check-verification/${username}`);
         if (response.data.isVerified) {
           localStorage.setItem('token', response.data.token);
           localStorage.setItem('username', username);

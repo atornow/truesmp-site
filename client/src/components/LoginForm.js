@@ -1,33 +1,29 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom'; // Import useNavigate hook
+import { useNavigate } from 'react-router-dom';
 
 function LoginForm() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
-  const [success, setSuccess] = useState('');
-  const navigate = useNavigate(); // Initialize useNavigate hook
+  const navigate = useNavigate();
 
   const handleSubmit = async (event) => {
     event.preventDefault();
     try {
-      // Replace with your backend endpoint
-      const response = await axios.post('http://73.63.150.254:3001/api/users/login', { username, password });
-
-      // Extract the token from the response
+      const response = await axios.post('http://localhost:3001/api/users/login', { username, password });
       const { token } = response.data;
-      setSuccess('Logging in...');
 
-      // Save the token and username to localStorage
       localStorage.setItem('token', token);
-      localStorage.setItem('username', username); // Also save username for later use
+      localStorage.setItem('username', username);
 
-      // Redirect to profile page after successful login
-      navigate('/profile');
+      setUsername('');
+      setPassword('');
+      setError('');
 
+      // Reload the page after successful login
+      window.location.reload();
     } catch (error) {
-      // Handle login error
       console.error(error);
       setError('Incorrect password/user does not exist.');
     }
@@ -37,7 +33,6 @@ function LoginForm() {
     <form onSubmit={handleSubmit}>
       <h2>Login</h2>
       {error && <div style={{ color: 'red' }}>{error}</div>}
-      {success && <div style={{ color: 'green' }}>{success}</div>}
       <div>
         <label>Username:</label>
         <input type="text" value={username} onChange={(e) => setUsername(e.target.value)} />

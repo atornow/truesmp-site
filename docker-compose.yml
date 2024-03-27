@@ -41,12 +41,12 @@ services:
     ports:
       - "5432:5432"
     volumes:
-      - dbt2-data:/var/lib/postgresql/data
+      - dbt3-data:/var/lib/postgresql/data
     networks:
       - app-network
 
 volumes:
-  dbt2-data:
+  dbt3-data:
   backend_data:
 
 networks:

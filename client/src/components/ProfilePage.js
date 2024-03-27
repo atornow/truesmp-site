@@ -14,11 +14,23 @@ function ProfilePage() {
   const [selectedBlockType, setSelectedBlockType] = useState('totalDirtMined');
   const [topMiners, setTopMiners] = useState([]);
 
+  useEffect(() => {
+    const fetchUserStats = async () => {
+      try {
+        const response = await axios.get(`http://localhost:3001/api/users/stats/${username}`);
+        setUserStats(response.data);
+      } catch (error) {
+        console.error('Error fetching user stats:', error);
+      }
+    };
+
+    fetchUserStats();
+  }, [username]);
 
   useEffect(() => {
     const fetchTopMiners = async () => {
       try {
-        const response = await axios.get(`http://73.63.150.254:3001/api/users/top-miners/${selectedBlockType}`);
+        const response = await axios.get(`http://localhost:3001/api/users/top-miners/${selectedBlockType}`);
         setTopMiners(response.data);
       } catch (error) {
         console.error('Error fetching top miners:', error);
@@ -42,7 +54,7 @@ function ProfilePage() {
   return (
     <div style={{ display: 'flex', flexDirection: 'column', height: '100vh' }}>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '1rem' }}>
-        <h2>{username}</h2>
+        <h2>Welcome, {username}!</h2>
         <div>
           <label htmlFor="blockType">Select Block Type:</label>
           <select
@@ -61,7 +73,9 @@ function ProfilePage() {
           <Bar key={selectedBlockType} data={chartData} options={{ maintainAspectRatio: false }} />
         </div>
         <div style={{ flex: 1, padding: '1rem' }}>
-          {/* Add other charts or stats here */}
+          <h3>Your Stats:</h3>
+          <p>Total Dirt Mined: {userStats.totalDirtMined}</p>
+          <p>Total Diamonds Mined: {userStats.totalDiamondsMined}</p>
         </div>
         <div style={{ flex: 1, padding: '1rem' }}>
           {/* Add other charts or stats here */}

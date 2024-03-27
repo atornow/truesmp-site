@@ -136,4 +136,20 @@ router.get('/check-verification/:username', async (req, res) => {
   }
 });
 
+router.get('/stats/:username', async (req, res) => {
+  try {
+    const { username } = req.params;
+    const user = await users.findOne({ where: { username } });
+    if (user) {
+      const { totalDirtMined, totalDiamondsMined } = user;
+      res.json({ totalDirtMined, totalDiamondsMined });
+    } else {
+      res.status(404).json({ message: 'User not found' });
+    }
+  } catch (error) {
+    console.error('Error fetching user stats:', error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+});
+
 module.exports = router;
