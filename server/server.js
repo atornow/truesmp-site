@@ -28,7 +28,7 @@ cron.schedule('*/45 * * * * *', async () => {
     const totalDiamondsMined = await getTotalMined(user.username, 'minecraft:deepslate_diamond_ore');
     await user.update({ totalDirtMined }); // Ensure the update is awaited
     await user.update({ totalDiamondsMined });
-    console.log(`Updated ${user.username}: ${totalDirtMined}`); // Moved inside loop for clarity
+    console.log(`Updated ${user.username}: ${user.isVerified}`); // Moved inside loop for clarity
   }
 });
 

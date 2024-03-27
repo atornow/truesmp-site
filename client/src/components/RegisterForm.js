@@ -6,11 +6,13 @@ function RegisterForm() {
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
+  const [verificationToken, setVerificationToken] = useState('');
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    setError(''); // Reset error message
-    setSuccess(''); // Reset success message
+    setError('');
+    setSuccess('');
+    setVerificationToken('');
 
     if (!username || !password) {
       setError('Username and password are required');
@@ -18,10 +20,9 @@ function RegisterForm() {
     }
 
     try {
-      // Replace with your actual backend endpoint for user registration
-      const response = await axios.post('http://localhost:3001/api/users/register', { username, password });
-      console.log(response.data);
-      setSuccess('Registration successful! You can now login.');
+      const response = await axios.post('http://73.63.150.254:3001/api/users/register', { username, password });
+      setSuccess(response.data.message);
+      setVerificationToken(response.data.token);
       setUsername('');
       setPassword('');
     } catch (error) {
@@ -35,7 +36,15 @@ function RegisterForm() {
       <form onSubmit={handleSubmit}>
         <h2>Register</h2>
         {error && <div style={{ color: 'red' }}>{error}</div>}
-        {success && <div style={{ color: 'green' }}>{success}</div>}
+        {success && (
+          <div style={{ color: 'green' }}>
+            {success}
+            <br />
+            Your verification token is: <strong>{verificationToken}</strong>
+            <br />
+            Please copy this token and use it with the /verify command in-game within 1 hour.
+          </div>
+        )}
         <div>
           <label htmlFor="username">Username:</label>
           <input

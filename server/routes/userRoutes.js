@@ -2,28 +2,12 @@ const express = require('express');
 const router = express.Router();
 const { users } = require('../models');
 const bcrypt = require('bcrypt');
+const crypto = require('crypto');
 const jwt = require('jsonwebtoken');
 const saltRounds = 10;
 const { getTotalMined } = require('../scripts/coreProtectDataAggregator');
 
-// Registration endpoint
-router.post('/register', async (req, res) => {
-  try {
-    const { username, password } = req.body;
-    // Hash the password before saving it to the database
-    const hashedPassword = await bcrypt.hash(password, saltRounds);
-    const newUser = await users.create({ username: username, password: hashedPassword });
-    const totalDirtMined = await getTotalMined(newUser.username, 'minecraft:dirt');
-    const totalDiamondsMined = await getTotalMined(newUser.username, 'minecraft:deepslate_diamond_ore');
-    newUser.update({ totalDirtMined });
-    newUser.update({ totalDiamondsMined });
-    res.json({ id: newUser.id, username: newUser.username });
-
-  } catch (error) {
-    res.status(400).send(error.message);
-  }
-});
-
+// Setup auth token for using protected route to talk to frontend
 const authenticateToken = (req, res, next) => {
   const authHeader = req.headers['Authorization'];
   const token = authHeader && authHeader.split(' ')[1]; // Extract the token
@@ -39,6 +23,30 @@ const authenticateToken = (req, res, next) => {
 // This route is now protected, and `req.user` contains the payload from the JWT
 router.get('/protected-route', authenticateToken, (req, res) => {
 
+});
+
+router.post('/register', async (req, res) => {
+  try {
+    const { username, password } = req.body;
+    const hashedPassword = await bcrypt.hash(password, saltRounds);
+
+    const verificationToken = crypto.randomBytes(20).toString('hex');
+    const verificationExpires = Date.now() + 300000; // Token expires in 5 min
+
+    const newUser = await users.create({
+      username: username,
+      password: hashedPassword,
+      verificationToken: verificationToken,
+      verificationExpires: verificationExpires,
+    });
+
+    res.json({
+      message: 'Registration successful. Please run /verify in-game within 5 minutes to complete the verification process.',
+      token: verificationToken,
+    });
+  } catch (error) {
+    res.status(400).send(error.message);
+  }
 });
 
 // Secret key for signing JWT, should be stored in environment variable
@@ -102,6 +110,27 @@ router.get('/top-miners/:blockType', async (req, res) => {
     res.json(topMiners);
   } catch (error) {
     console.error('Error fetching top miners:', error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+});
+
+router.post('/verify', async (req, res) => {
+  try {
+    const { username, token } = req.body;
+    const user = await users.findOne({ where: { username } });
+
+    if (user) {
+      if (user.verificationToken === token && user.verificationExpires > Date.now()) {
+        await user.update({ isVerified: true, verificationToken: null, verificationExpires: null });
+        return res.status(200).json({ message: `Verification successful for ${username}` });
+      } else {
+        return res.status(400).json({ message: 'Invalid or expired verification token' });
+      }
+    } else {
+      return res.status(404).json({ message: 'User not found' });
+    }
+  } catch (error) {
+    console.error('Error handling verification request:', error);
     res.status(500).json({ message: 'Internal server error' });
   }
 });

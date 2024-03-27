@@ -17,7 +17,7 @@ function ProfilePage() {
   useEffect(() => {
     const fetchTopMiners = async () => {
       try {
-        const response = await axios.get(`http://localhost:3001/api/users/top-miners/${selectedBlockType}`);
+        const response = await axios.get(`http://73.63.150.254:3001/api/users/top-miners/${selectedBlockType}`);
         setTopMiners(response.data);
       } catch (error) {
         console.error('Error fetching top miners:', error);

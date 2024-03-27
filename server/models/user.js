@@ -13,6 +13,12 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.BOOLEAN,
       defaultValue: false,
     },
+    verificationToken: {
+      type: DataTypes.STRING,
+    },
+    verificationExpires: {
+      type: DataTypes.DATE,
+    },
     totalDirtMined: {
       type: DataTypes.INTEGER,
       defaultValue: 0,
