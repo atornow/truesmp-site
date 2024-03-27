@@ -91,5 +91,19 @@ router.post('/stats', async (req, res) => {
   }
 });
 
+router.get('/top-miners/:blockType', async (req, res) => {
+  try {
+    const { blockType } = req.params;
+    const topMiners = await users.findAll({
+      order: [[blockType, 'DESC']],
+      limit: 10,
+      attributes: ['username', blockType],
+    });
+    res.json(topMiners);
+  } catch (error) {
+    console.error('Error fetching top miners:', error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+});
 
 module.exports = router;
