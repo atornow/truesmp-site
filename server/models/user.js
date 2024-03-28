@@ -7,7 +7,7 @@ module.exports = (sequelize, DataTypes) => {
     },
     password: { // Add a password field
       type: DataTypes.STRING,
-      allowNull: false,
+      allowNull: true,
     },
     isVerified: {
       type: DataTypes.BOOLEAN,
@@ -27,6 +27,9 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.INTEGER,
       defaultValue: 0,
         },
+    playtimes: {
+      type: DataTypes.ARRAY(DataTypes.INTEGER)
+    }
     // Add other fields as needed
   });
 

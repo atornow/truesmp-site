@@ -8,10 +8,7 @@ WORKDIR /usr/src/app
 COPY package*.json ./
 
 # Install dependencies
-RUN npm install
-
-# Install nodemon globally
-RUN npm install -g nodemon
+RUN npm install --production
 
 # Copy the rest of your application's code
 COPY . .
@@ -19,5 +16,5 @@ COPY . .
 # Make port 3001 available to the world outside this container
 EXPOSE 3001
 
-# Define the command to run your app using nodemon
-CMD ["nodemon", "--legacy-watch", "server.js"]
+# Define the command to run your app
+CMD ["node", "server.js"]

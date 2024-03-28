@@ -1,6 +1,16 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import LoginRegisterContainer from './LoginRegisterContainer';
+import styled from 'styled-components';
+
+const FieldsContainer = styled.div`
+  padding-bottom: 1rem; /* Adjust the value as needed */
+`;
+
+const ButtonContainer = styled.div`
+  padding-top: 0rem; /* Adjust the value as needed */
+`;
 
 function LoginForm() {
   const [username, setUsername] = useState('');
@@ -30,9 +40,11 @@ function LoginForm() {
   };
 
   return (
+  <LoginRegisterContainer>
     <form onSubmit={handleSubmit}>
       <h2>Login</h2>
       {error && <div style={{ color: 'red' }}>{error}</div>}
+      <FieldsContainer>
       <div>
         <label>Username:</label>
         <input type="text" value={username} onChange={(e) => setUsername(e.target.value)} />
@@ -41,8 +53,10 @@ function LoginForm() {
         <label>Password:</label>
         <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
       </div>
+      </FieldsContainer>
       <button type="submit">Login</button>
     </form>
+  </LoginRegisterContainer>
   );
 }
 

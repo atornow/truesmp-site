@@ -3,7 +3,10 @@
 # dependencies
 /node_modules
 /.pnp
+/public
+/src/DoodleCss
 .pnp.js
+/package-lock.json
 
 # testing
 /coverage
