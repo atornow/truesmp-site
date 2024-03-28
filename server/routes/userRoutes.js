@@ -6,6 +6,7 @@ const crypto = require('crypto');
 const jwt = require('jsonwebtoken');
 const saltRounds = 10;
 const { getTotalMined } = require('../scripts/coreProtectDataAggregator');
+const { getPlaytime } = require('../scripts/PlaytimeCalculator');
 const jwtSecret = process.env.JWT_SECRET;
 
 
@@ -31,27 +32,41 @@ router.get('/protected-route', authenticateToken, (req, res) => {
 router.post('/register', async (req, res) => {
   try {
     const { username, password } = req.body;
-    const hashedPassword = await bcrypt.hash(password, saltRounds);
+    const user = await users.findOne({ where: { username } });
 
-    const verificationToken = crypto.randomBytes(3).toString('hex');
-    const verificationExpires = Date.now() + 300000; // Token expires in 5 min
+    if (!user || user.password === null) {
+      const hashedPassword = await bcrypt.hash(password, saltRounds);
+      const verificationToken = crypto.randomBytes(3).toString('hex');
+      const verificationExpires = Date.now() + 300000; // Token expires in 5 min
 
-    const newUser = await users.create({
-      username: username,
-      password: hashedPassword,
-      verificationToken: verificationToken,
-      verificationExpires: verificationExpires,
-    });
+      if (user) {
+        await user.update({
+          password: hashedPassword,
+          verificationToken: verificationToken,
+          verificationExpires: verificationExpires,
+        });
+      } else {
+        await users.create({
+          username: username,
+          password: hashedPassword,
+          verificationToken: verificationToken,
+          verificationExpires: verificationExpires,
+        });
+      }
 
-    res.json({
-      message: 'Please run /verify in-game within 5 minutes to link account.',
-      token: verificationToken,
-      username: username,
-    });
+      res.json({
+        message: 'Please run /verify in-game within 5 minutes to link account.',
+        token: verificationToken,
+        username: username,
+      });
+    } else {
+      res.status(400).json({ message: 'Username already in use' });
+    }
   } catch (error) {
-    res.status(400).send(error.message);
+    res.status(500).json({ message: 'Internal server error' });
   }
 });
+
 
 
 // Login endpoint
@@ -93,6 +108,26 @@ router.get('/top-miners/:blockType', async (req, res) => {
   }
 });
 
+router.get('/:username/playtimes', async (req, res) => {
+  try {
+    const { username } = req.params;
+
+    const user = await users.findOne({
+      where: { username },
+      attributes: ['playtimes'],
+    });
+
+    if (user) {
+      res.json(user.playtimes);
+    } else {
+      res.status(404).json({ message: 'User not found' });
+    }
+  } catch (error) {
+    console.error('Error fetching user playtimes:', error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+});
+
 
 router.post('/verify', async (req, res) => {
   try {
@@ -101,7 +136,9 @@ router.post('/verify', async (req, res) => {
 
     if (user) {
       if (user.verificationToken === token && user.verificationExpires > Date.now()) {
-        await user.update({ isVerified: true, verificationToken: null, verificationExpires: null });
+        const newPlaytimes = await getPlaytime(user.username);
+        const playtimesArray = JSON.parse(newPlaytimes);
+        await user.update({ isVerified: true, verificationToken: null, verificationExpires: null, playtimes: playtimesArray});
         return res.status(200).json({ message: `Verification successful for ${username}` });
       } else {
         return res.status(400).json({ message: 'Invalid or expired verification token' });
