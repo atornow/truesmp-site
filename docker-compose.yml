@@ -41,12 +41,12 @@ services:
     ports:
       - "5432:5432"
     volumes:
-      - dbg8-data:/var/lib/postgresql/data
+      - d1-data:/var/lib/postgresql/data
     networks:
       - app-network
 
 volumes:
-  dbg8-data:
+  d1-data:
   backend_data:
 
 networks:

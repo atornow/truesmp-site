@@ -28,6 +28,9 @@ module.exports = (sequelize, DataTypes) => {
       defaultValue: 0,
         },
     playtimes: {
+      type: DataTypes.ARRAY(DataTypes.INTEGER),
+    },
+    userKilledStats: {
       type: DataTypes.ARRAY(DataTypes.INTEGER)
     }
     // Add other fields as needed

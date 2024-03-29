@@ -4,11 +4,12 @@ const { users } = require('../models');
 const bcrypt = require('bcrypt');
 const crypto = require('crypto');
 const jwt = require('jsonwebtoken');
+const mysql = require('mysql2/promise');
 const saltRounds = 10;
 const { getTotalMined } = require('../scripts/coreProtectDataAggregator');
 const { getPlaytime } = require('../scripts/PlaytimeCalculator');
+const { fetchEntityNames } = require('../scripts/fetchEntityNames');
 const jwtSecret = process.env.JWT_SECRET;
-
 
 // Setup auth token for using protected route to talk to frontend
 const authenticateToken = (req, res, next) => {
@@ -67,6 +68,34 @@ router.post('/register', async (req, res) => {
   }
 });
 
+router.get('/stat-map', async (req, res) => {
+  try {
+    const statMap = await fetchEntityNames();
+    res.json(statMap);
+  } catch (error) {
+    console.error('Error fetching stat map:', error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+});
+
+router.get('/user-killed-stats/:username', async (req, res) => {
+  const { username } = req.params;
+  try {
+    const user = await users.findOne({
+      where: { username },
+      attributes: ['userKilledStats'],
+    });
+
+    if (user) {
+      res.json(user.userKilledStats);
+    } else {
+      res.status(404).json({ message: 'User not found' });
+    }
+  } catch (error) {
+    console.error('Error fetching user killed stats:', error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+});
 
 
 // Login endpoint
