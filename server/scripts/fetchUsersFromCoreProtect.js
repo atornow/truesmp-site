@@ -15,7 +15,6 @@ async function fetchUniqueUsers() {
       'SELECT DISTINCT user FROM s4_coreprotect.co_user'
     );
     const uniqueUsers = rows.map(row => row.user);
-    console.log('Unique users:', uniqueUsers); // Add this line
     return uniqueUsers;
   } catch (error) {
     console.error('Error fetching unique users:', error);

@@ -16,48 +16,35 @@ async function getPlaytime(username) {
          JSON_ARRAYAGG(COALESCE(playtime, 0) ORDER BY play_date DESC) AS playtime_array
        FROM
          (SELECT
-           generated_dates.play_date,
-           COALESCE(
-             SUM(
-               CASE
-                 WHEN action = 1 THEN
-                   COALESCE(
-                     (SELECT time
-                      FROM s4_coreprotect.co_session AS s2
-                      WHERE s2.user = s1.user AND
-                            s2.action = 0 AND
-                            s2.time > s1.time AND
-                            DATE(FROM_UNIXTIME(s2.time)) = DATE(FROM_UNIXTIME(s1.time))
-                      LIMIT 1),
-                     UNIX_TIMESTAMP(NOW())
-                   ) - time
-                 ELSE 0
-               END
-             ),
-             0
-           ) AS playtime
+           DATE(FROM_UNIXTIME(start_time)) AS play_date,
+           COALESCE(SUM(end_time - start_time), 0) AS playtime
          FROM
-           (SELECT ADDDATE('1970-01-01', t4.i*10000 + t3.i*1000 + t2.i*100 + t1.i*10 + t0.i) play_date FROM
-            (SELECT 0 i UNION SELECT 1 UNION SELECT 2 UNION SELECT 3 UNION SELECT 4 UNION SELECT 5 UNION SELECT 6 UNION SELECT 7 UNION SELECT 8 UNION SELECT 9) t0,
-            (SELECT 0 i UNION SELECT 1 UNION SELECT 2 UNION SELECT 3 UNION SELECT 4 UNION SELECT 5 UNION SELECT 6 UNION SELECT 7 UNION SELECT 8 UNION SELECT 9) t1,
-            (SELECT 0 i UNION SELECT 1 UNION SELECT 2 UNION SELECT 3 UNION SELECT 4 UNION SELECT 5 UNION SELECT 6 UNION SELECT 7 UNION SELECT 8 UNION SELECT 9) t2,
-            (SELECT 0 i UNION SELECT 1 UNION SELECT 2 UNION SELECT 3 UNION SELECT 4 UNION SELECT 5 UNION SELECT 6 UNION SELECT 7 UNION SELECT 8 UNION SELECT 9) t3,
-            (SELECT 0 i UNION SELECT 1 UNION SELECT 2 UNION SELECT 3 UNION SELECT 4 UNION SELECT 5 UNION SELECT 6 UNION SELECT 7 UNION SELECT 8 UNION SELECT 9) t4) generated_dates
-         LEFT JOIN
-           s4_coreprotect.co_session AS s1 ON DATE(FROM_UNIXTIME(s1.time)) = generated_dates.play_date AND
-                                               s1.user = (
-                                                           SELECT rowid
-                                                           FROM s4_coreprotect.co_user
-                                                           WHERE user = ?
-                                                         )
-         WHERE
-           generated_dates.play_date BETWEEN (SELECT MIN(DATE(FROM_UNIXTIME(time))) FROM s4_coreprotect.co_session WHERE user = (SELECT rowid FROM s4_coreprotect.co_user WHERE user = ?))
-           AND
-           (SELECT MAX(DATE(FROM_UNIXTIME(time))) FROM s4_coreprotect.co_session WHERE user = (SELECT rowid FROM s4_coreprotect.co_user WHERE user = ?))
+           (SELECT
+             s1.time AS start_time,
+             COALESCE(
+               (SELECT s2.time
+                FROM s4_coreprotect.co_session AS s2
+                WHERE s2.user = s1.user AND
+                      s2.action = 0 AND
+                      s2.time > s1.time
+                ORDER BY s2.time
+                LIMIT 1),
+               UNIX_TIMESTAMP()
+             ) AS end_time
+           FROM
+             s4_coreprotect.co_session AS s1
+           WHERE
+             s1.user = (
+               SELECT rowid
+               FROM s4_coreprotect.co_user
+               WHERE user = ?
+             ) AND
+             s1.action = 1
+           ) AS sessions
          GROUP BY
-           generated_dates.play_date) AS daily_playtime;
-`,
-      [username, username, username]
+           play_date) AS daily_playtime;
+      `,
+      [username]
     );
 
     if (rows.length > 0) {
