@@ -5,8 +5,19 @@ import { Bar } from 'react-chartjs-2';
 import { CategoryScale } from 'chart.js';
 import { Chart as ChartJS } from 'chart.js/auto';
 import { Line } from 'react-chartjs-2';
+import KilledStatsChart from './KilledStatsChart';
+import PlaytimeChart from './PlaytimeChart';
+import BlocksMinedChart from './BlocksMinedChart';
+import AccountLogo from '../AccountLogo.png';
+import styled from 'styled-components';
 
 ChartJS.register(CategoryScale);
+
+const LogoImage = styled.img`
+    width: 50px;
+    height: 50px;
+    margin-right: 1rem;
+  `;
 
 function ProfilePage() {
   const navigate = useNavigate();
@@ -15,6 +26,44 @@ function ProfilePage() {
   const [selectedBlockType, setSelectedBlockType] = useState('totalDirtMined');
   const [playtimes, setPlaytimes] = useState([]);
   const [topMiners, setTopMiners] = useState([]);
+  const [statMap, setStatMap] = useState([]);
+  const [userKilledStats, setUserKilledStats] = useState([]);
+
+
+  useEffect(() => {
+      const fetchUserKilledStats = async () => {
+        try {
+          const response = await axios.get(`http://localhost:3001/api/users/user-killed-stats/${username}`);
+          setUserKilledStats(response.data);
+          console.log('userKilledStats:', response.data);
+        } catch (error) {
+          console.error('Error fetching user killed stats:', error);
+        }
+      };
+
+      fetchUserKilledStats();
+    }, [username]);
+
+  useEffect(() => {
+    const fetchStatMap = async () => {
+      try {
+        const response = await axios.get('http://localhost:3001/api/users/stat-map');
+        setStatMap(response.data);
+        localStorage.setItem('statMap', JSON.stringify(response.data));
+      } catch (error) {
+        console.error('Error fetching stat map:', error);
+      }
+    };
+
+    const storedStatMap = localStorage.getItem('statMap');
+    if (storedStatMap) {
+      setStatMap(JSON.parse(storedStatMap));
+      console.log('statMapp:', storedStatMap);
+    } else {
+      fetchStatMap();
+      console.log('statMap:', storedStatMap);
+    }
+  }, []);
 
   useEffect(() => {
     const fetchUserStats = async () => {
@@ -73,33 +122,13 @@ function ProfilePage() {
     return labels;
   };
 
-  const chartData = {
-    labels: topMiners.map((miner) => miner.username),
-    datasets: [
-      {
-        label: `Top 10 Miners - ${selectedBlockType}`,
-        data: topMiners.map((miner) => miner[selectedBlockType]),
-        backgroundColor: 'rgba(75,192,192,0.6)',
-      },
-    ],
-  };
-
-  const chartDataPlay = {
-    labels: generateDayLabels(playtimes?.length || 0),
-    datasets: [
-      {
-        label: 'Playtimes',
-        data: (playtimes || []).slice().reverse(),
-        borderColor: 'rgba(75,192,192,1)',
-        backgroundColor: 'rgba(75,192,192,0.2)',
-      },
-    ],
-  };
-
   return (
     <div style={{ display: 'flex', flexDirection: 'column', height: '100vh' }}>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '1rem' }}>
-        <h2>Welcome, {username}!</h2>
+        <div style={{ display: 'flex', alignItems: 'center' }}>
+            <LogoImage src={AccountLogo} alt="Account Logo" className="border doodle-border-icon"/>
+          <h2>Welcome, {username}!</h2>
+        </div>
         <div>
           <label htmlFor="blockType">Select Block Type:</label>
           <select
@@ -113,21 +142,10 @@ function ProfilePage() {
           </select>
         </div>
       </div>
-      <div style={{ display: 'flex', flex: 1 }}>
-        <div style={{ flex: 1, padding: '1rem', height: '50vh' }}>
-          <Bar key={selectedBlockType} data={chartData} options={{ maintainAspectRatio: false }} />
-        </div>
-        <div style={{ flex: 1, padding: '1rem' }}>
-          <h3>Your Stats:</h3>
-          <p>Total Dirt Mined: {userStats.totalDirtMined}</p>
-          <p>Total Diamonds Mined: {userStats.totalDiamondsMined}</p>
-        </div>
-        <div style={{ flex: 1, padding: '1rem', height: '50vh'  }}>
-          <Line data={chartDataPlay} options={{ maintainAspectRatio: false }} />
-        </div>
-        <div style={{ flex: 1, padding: '1rem' }}>
-          {/* Add other charts or stats here */}
-        </div>
+      <div style={{ display: 'flex', flexDirection: 'row', flexWrap: 'wrap' }}>
+        <BlocksMinedChart selectedBlockType={selectedBlockType} topMiners={topMiners} />
+        <PlaytimeChart playtimes={playtimes} />
+        <KilledStatsChart userKilledStats={userKilledStats} statMap={statMap} />
       </div>
     </div>
   );
