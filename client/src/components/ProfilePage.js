@@ -18,7 +18,6 @@ const LogoImage = styled.img`
 
 function ProfilePage() {
   const username = localStorage.getItem('username');
-  const [blocksPlaced, setBlocksPlaced] = useState([]);
   const [blocksMined, setBlocksMined] = useState([]);
   const [playtimes, setPlaytimes] = useState([]);
   const [entityMap, setEntityMap] = useState([]);
@@ -26,90 +25,44 @@ function ProfilePage() {
   const [entitiesKilled, setEntitiesKilled] = useState([]);
 
   useEffect(() => {
-    const fetchEntitiesKilled = async () => {
+    const fetchData = async () => {
       try {
-        const response = await axios.get(`http://localhost:3001/api/users/${username}/entities-killed`);
-        setEntitiesKilled(response.data);
-      } catch (error) {
-        console.error('Error fetching entities killed:', error);
-      }
-    };
+        const [
+          entitiesKilledResponse,
+          entityMapResponse,
+          blockMapResponse,
+          blocksMinedResponse,
+          playtimesResponse,
+        ] = await Promise.all([
+          axios.get(`http://localhost:3001/api/stats/${username}/entitiesKilled`),
+          axios.get('http://localhost:3001/api/stats/entity-map'),
+          axios.get('http://localhost:3001/api/stats/block-map'),
+          axios.get(`http://localhost:3001/api/stats/${username}/blocksMined`),
+          axios.get(`http://localhost:3001/api/stats/${username}/playtimes`),
+        ]);
 
-    fetchEntitiesKilled();
-  }, [username]);
+        setEntitiesKilled(entitiesKilledResponse.data);
+        setEntityMap(entityMapResponse.data);
+        setBlockMap(blockMapResponse.data);
+        setBlocksMined(blocksMinedResponse.data);
+        setPlaytimes(playtimesResponse.data);
 
-  useEffect(() => {
-    const fetchEntityMap = async () => {
-      try {
-        const response = await axios.get('http://localhost:3001/api/users/entity-map');
-        setEntityMap(response.data);
-        localStorage.setItem('entityMap', JSON.stringify(response.data));
+        localStorage.setItem('entityMap', JSON.stringify(entityMapResponse.data));
+        localStorage.setItem('blockMap', JSON.stringify(blockMapResponse.data));
       } catch (error) {
-        console.error('Error fetching entity map:', error);
+        console.error('Error fetching data:', error);
       }
     };
 
     const storedEntityMap = localStorage.getItem('entityMap');
-    if (storedEntityMap) {
-      setEntityMap(JSON.parse(storedEntityMap));
-    } else {
-      fetchEntityMap();
-    }
-  }, []);
-
-  useEffect(() => {
-    const fetchBlockMap = async () => {
-      try {
-        const response = await axios.get('http://localhost:3001/api/users/block-map');
-        setBlockMap(response.data);
-        localStorage.setItem('blockMap', JSON.stringify(response.data));
-      } catch (error) {
-        console.error('Error fetching block map:', error);
-      }
-    };
-
     const storedBlockMap = localStorage.getItem('blockMap');
-    if (storedBlockMap) {
+
+    if (storedEntityMap && storedBlockMap) {
+      setEntityMap(JSON.parse(storedEntityMap));
       setBlockMap(JSON.parse(storedBlockMap));
-    } else {
-      fetchBlockMap();
     }
-  }, []);
 
-  useEffect(() => {
-    const fetchBlocksPlaced = async () => {
-      try {
-        const response = await axios.get(`http://localhost:3001/api/users/${username}/blocks-placed`);
-        setBlocksPlaced(response.data);
-      } catch (error) {
-        console.error('Error fetching user blocks placed:', error);
-      }
-    };
-
-    const fetchBlocksMined = async () => {
-      try {
-        const response = await axios.get(`http://localhost:3001/api/users/${username}/blocks-mined/`);
-        setBlocksMined(response.data);
-      } catch (error) {
-        console.error('Error fetching user blocks mined:', error);
-      }
-    };
-
-    fetchBlocksPlaced();
-    fetchBlocksMined();
-  }, [username]);
-
-  useEffect(() => {
-    const fetchPlaytimes = async () => {
-      try {
-        const response = await axios.get(`http://localhost:3001/api/users/${username}/playtimes`);
-        setPlaytimes(response.data);
-      } catch (error) {
-        console.error('Error fetching playtimes:', error);
-      }
-    };
-
-    fetchPlaytimes();
+    fetchData();
   }, [username]);
 
   return (

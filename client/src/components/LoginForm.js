@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
 import LoginRegisterContainer from './LoginRegisterContainer';
 import styled from 'styled-components';
 
@@ -8,20 +7,15 @@ const FieldsContainer = styled.div`
   padding-bottom: 1rem; /* Adjust the value as needed */
 `;
 
-const ButtonContainer = styled.div`
-  padding-top: 0rem; /* Adjust the value as needed */
-`;
-
 function LoginForm() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
-  const navigate = useNavigate();
 
   const handleSubmit = async (event) => {
     event.preventDefault();
     try {
-      const response = await axios.post('http://localhost:3001/api/users/login', { username, password });
+      const response = await axios.post('http://localhost:3001/api/auth/login', { username, password });
       const { token } = response.data;
 
       localStorage.setItem('token', token);
@@ -37,6 +31,7 @@ function LoginForm() {
       console.error(error);
       setError('Incorrect password/user does not exist.');
     }
+
   };
 
   return (

@@ -32,7 +32,7 @@ function RegisterForm() {
     }
 
     try {
-      const response = await axios.post('http://localhost:3001/api/users/register', { username, password });
+      const response = await axios.post('http://localhost:3001/api/auth/register', { username, password });
       setSuccess(response.data.message);
       setVerificationToken(response.data.token);
       setUsername('');

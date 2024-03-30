@@ -5,9 +5,6 @@ const bcrypt = require('bcrypt');
 const crypto = require('crypto');
 const jwt = require('jsonwebtoken');
 const saltRounds = 10;
-const { getPlaytime } = require('../scripts/PlaytimeCalculator');
-const { fetchEntityNames } = require('../scripts/fetchEntityNames');
-const { fetchBlockNames } = require('../scripts/fetchBlockNames');
 const jwtSecret = process.env.JWT_SECRET;
 
 // Registration endpoint, generates token and expiration time and creates temp user.
@@ -45,17 +42,6 @@ router.post('/register', async (req, res) => {
       res.status(400).json({ message: 'Username already in use' });
     }
   } catch (error) {
-    res.status(500).json({ message: 'Internal server error' });
-  }
-});
-
-// Stat map endpoint, uses script to get entity map.
-router.get('/entity-map', async (req, res) => {
-  try {
-    const entityMap = await fetchEntityNames();
-    res.json(entityMap);
-  } catch (error) {
-    console.error('Error fetching entity map:', error);
     res.status(500).json({ message: 'Internal server error' });
   }
 });
@@ -123,93 +109,6 @@ router.post('/login', async (req, res) => {
     }
   } catch (error) {
     res.status(500).send(error.message);
-  }
-});
-
-router.get('/:username/playtimes', async (req, res) => {
-  try {
-    const { username } = req.params;
-
-    const user = await users.findOne({
-      where: { username },
-      attributes: ['playtimes'],
-    });
-
-    if (user) {
-      res.json(user.playtimes);
-    } else {
-      res.status(404).json({ message: 'User not found' });
-    }
-  } catch (error) {
-    console.error('Error fetching user playtimes:', error);
-    res.status(500).json({ message: 'Internal server error' });
-  }
-});
-
-router.get('/:username/entities-killed', async (req, res) => {
-  const { username } = req.params;
-  try {
-    const user = await users.findOne({
-      where: { username },
-      attributes: ['entitiesKilled'],
-    });
-
-    if (user) {
-      res.json(user.entitiesKilled);
-    } else {
-      res.status(404).json({ message: 'User not found' });
-    }
-  } catch (error) {
-    console.error('Error fetching user killed stats:', error);
-    res.status(500).json({ message: 'Internal server error' });
-  }
-});
-
-router.get('/:username/blocks-placed', async (req, res) => {
-  const { username } = req.params;
-  try {
-    const user = await users.findOne({
-      where: { username },
-      attributes: ['blocksPlaced'],
-    });
-
-    if (user) {
-      res.json(user.blocksPlaced);
-    } else {
-      res.status(404).json({ message: 'User not found' });
-    }
-  } catch (error) {
-    console.error('Error fetching user blocks placed:', error);
-    res.status(500).json({ message: 'Internal server error' });
-  }
-});
-
-router.get('/:username/blocks-mined', async (req, res) => {
-  const { username } = req.params;
-  try {
-    const user = await users.findOne({
-      where: { username },
-      attributes: ['blocksMined'],
-    });
-
-    if (user) {
-      res.json(user.blocksMined);
-    } else {
-      res.status(404).json({ message: 'User not found' });
-    }
-  } catch (error) {
-    console.error('Error fetching user blocks mined:', error);
-    res.status(500).json({ message: 'Internal server error' });
-  }
-});
-
-router.get('/block-map', async (req, res) => {
-  try {
-    const statMap = await fetchBlockNames();
-    res.json(statMap);
-  } catch (error) {
-    console.error('Error fetching stat map:', error);
-    res.status(500).json({ message: 'Internal server error' });
   }
 });
 
