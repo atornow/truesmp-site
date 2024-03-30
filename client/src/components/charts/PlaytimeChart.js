@@ -24,15 +24,52 @@ function PlaytimeChart({ playtimes }) {
       {
         label: 'Playtimes',
         data: (playtimes || []).slice().reverse(),
-        borderColor: 'rgba(75,192,192,1)',
-        backgroundColor: 'rgba(75,192,192,0.2)',
+        borderColor: '#202020',
+        backgroundColor: '#FFFFFF',
       },
     ],
   };
 
+  const chartOptions = {
+    maintainAspectRatio: false,
+    plugins: {
+      tooltip: {
+        titleFont: {
+          family: 'Xkcd',
+        },
+        bodyFont: {
+          family: 'Xkcd',
+        },
+      },
+      legend: {
+        labels: {
+          font: {
+            family: 'Xkcd',
+          },
+        },
+      },
+    },
+    scales: {
+      x: {
+        ticks: {
+          font: {
+            family: 'Xkcd',
+          },
+        },
+      },
+      y: {
+        ticks: {
+          font: {
+            family: 'Xkcd',
+          },
+        },
+      },
+    },
+  };
+
   return (
     <div style={{ flex: 2, padding: '1rem', height: '400px' }}>
-      <Line data={chartDataPlay} options={{ maintainAspectRatio: false }} />
+      <Line data={chartDataPlay} options={chartOptions}  />
     </div>
   );
 }

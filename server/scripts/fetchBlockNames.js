@@ -8,21 +8,21 @@ const coreProtectDBConfig = {
   database: process.env.COREPROTECT_DB_NAME,
 };
 
-async function fetchEntityNames() {
+async function fetchBlockNames() {
   const connection = await mysql.createConnection(coreProtectDBConfig);
   try {
     const [rows] = await connection.execute(
-      'SELECT id - 1 AS id, entity FROM s4_coreprotect.co_entity_map ORDER BY id;'
+      'SELECT id - 1 AS id, material FROM s4_coreprotect.co_material_map ORDER BY id;'
     );
 
-    const entityNames = rows.map(row => row.entity.replace(/^minecraft:/, ''));
-    return entityNames;
+    const blockNames = rows.map(row => row.material.replace(/^minecraft:/, ''));
+    return blockNames;
   } catch (error) {
-    console.error('Error fetching entity names:', error);
+    console.error('Error fetching block names:', error);
     return [];
   } finally {
     await connection.end();
   }
 }
 
-module.exports = { fetchEntityNames };
+module.exports = { fetchBlockNames };

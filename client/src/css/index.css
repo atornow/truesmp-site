@@ -14,7 +14,7 @@ code {
 
 @font-face {
   font-family: 'Xkcd';
-  src: url('./fonts/xkcd.otf') format('opentype');
+  src: url('../fonts/xkcd.otf') format('opentype');
   font-weight: normal;
   font-style: normal;
 }

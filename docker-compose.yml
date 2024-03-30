@@ -41,12 +41,12 @@ services:
     ports:
       - "5432:5432"
     volumes:
-      - d1-data:/var/lib/postgresql/data
+      - db01-data:/var/lib/postgresql/data
     networks:
       - app-network
 
 volumes:
-  d1-data:
+  db01-data:
   backend_data:
 
 networks:

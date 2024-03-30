@@ -4,7 +4,7 @@
 /node_modules
 /.pnp
 /public
-/src/DoodleCss
+/src/css/doodle-css
 .pnp.js
 /package-lock.json
 

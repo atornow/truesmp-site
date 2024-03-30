@@ -45,6 +45,8 @@ function Navbar() {
   const handleLogout = () => {
     localStorage.removeItem('token');
     localStorage.removeItem('username');
+    // Clear all data from local storage
+    localStorage.clear();
     window.location.reload();
   };
 

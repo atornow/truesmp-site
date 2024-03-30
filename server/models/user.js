@@ -19,19 +19,17 @@ module.exports = (sequelize, DataTypes) => {
     verificationExpires: {
       type: DataTypes.DATE,
     },
-    totalDirtMined: {
-      type: DataTypes.INTEGER,
-      defaultValue: 0,
+    blocksPlaced: {
+      type: DataTypes.ARRAY(DataTypes.INTEGER),
     },
-    totalDiamondsMined: {
-      type: DataTypes.INTEGER,
-      defaultValue: 0,
-        },
+    blocksMined: {
+      type: DataTypes.ARRAY(DataTypes.INTEGER),
+    },
     playtimes: {
       type: DataTypes.ARRAY(DataTypes.INTEGER),
     },
-    userKilledStats: {
-      type: DataTypes.ARRAY(DataTypes.INTEGER)
+    entitiesKilled: {
+      type: DataTypes.ARRAY(DataTypes.INTEGER),
     }
     // Add other fields as needed
   });

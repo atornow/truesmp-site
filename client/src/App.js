@@ -9,7 +9,7 @@ import Navbar from './components/Navbar';
 import EventsPage from './components/EventsPage';
 import RulesPage from './components/RulesPage';
 import VerificationPage from './components/VerificationPage';
-import './DoodleCss/doodle.css';
+import './css/doodle-css/doodle.css';
 
 
 const GlobalStyle = createGlobalStyle`
@@ -27,14 +27,6 @@ const AppContainer = styled.div`
   min-height: 100vh;
   padding-top: 60px;
 `;
-
-const inputStyle = {
-  fontFamily: "'Xkcd', cursive",
-};
-
-const buttonStyle = {
-  fontFamily: "'Xkcd', cursive",
-};
 
 function App() {
   const isAuthenticated = localStorage.getItem('token');
