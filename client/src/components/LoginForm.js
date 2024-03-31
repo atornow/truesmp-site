@@ -1,8 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import axios from 'axios';
 import LoginRegisterContainer from './LoginRegisterContainer';
 import styled from 'styled-components';
-
+import { AuthContext } from '../contexts/AuthContext';
 const FieldsContainer = styled.div`
   padding-bottom: 1rem; /* Adjust the value as needed */
 `;
@@ -11,6 +11,7 @@ function LoginForm() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
+  const { login } = useContext(AuthContext);
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -18,8 +19,7 @@ function LoginForm() {
       const response = await axios.post('http://localhost:3001/api/auth/login', { username, password });
       const { token } = response.data;
 
-      localStorage.setItem('token', token);
-      localStorage.setItem('username', username);
+      login(token, username);
 
       setUsername('');
       setPassword('');

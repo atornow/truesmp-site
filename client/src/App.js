@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
 import styled, { createGlobalStyle } from 'styled-components';
 import LoginForm from './components/LoginForm';
@@ -9,8 +9,8 @@ import Navbar from './components/Navbar';
 import EventsPage from './components/EventsPage';
 import RulesPage from './components/RulesPage';
 import VerificationPage from './components/VerificationPage';
+import { AuthContext } from './contexts/AuthContext';
 import './css/doodle-css/doodle.css';
-
 
 const GlobalStyle = createGlobalStyle`
   body {
@@ -29,48 +29,43 @@ const AppContainer = styled.div`
 `;
 
 function App() {
-  const isAuthenticated = localStorage.getItem('token');
+  const { isAuthenticated } = useContext(AuthContext);
 
   return (
     <Router>
-          <GlobalStyle />
-          <AppContainer>
-      <Navbar />
-      <Routes>
-        <Route path="/login" element={<LoginForm />} />
-        <Route path="/register" element={<RegisterForm />} />
-        <Route path="/events" element={<EventsPage />} />
-        <Route path="/rules" element={<RulesPage />} />
-        <Route path="/verify" element={<VerificationPage />} />
-        <Route
-          path="/"
-          element={
-            isAuthenticated ? (
+      <GlobalStyle />
+      <AppContainer>
+        <Navbar />
+        <Routes>
+          <Route
+            path="/"
+            element={
+              !isAuthenticated ? (
+                <div>
+                  <h2>Welcome</h2>
+                  <div style={{ display: 'flex', justifyContent: 'space-around' }}>
+                    <LoginForm />
+                    <RegisterForm />
+                  </div>
+                </div>
+              ) : (
+                <Navigate to="/profile" />
+              )
+            }
+          />
+          <Route
+            path="/profile"
+            element={
               <ProtectedRoute>
                 <ProfilePage />
               </ProtectedRoute>
-            ) : (
-              <Navigate to="/profile" />
-            )
-          }
-        />
-        <Route
-          path="*"
-          element={
-            !isAuthenticated ? (
-              <div>
-                <h2>Welcome</h2>
-                <div style={{ display: 'flex', justifyContent: 'space-around' }}>
-                  <LoginForm />
-                  <RegisterForm />
-                </div>
-              </div>
-            ) : (
-              <Navigate to="/" />
-            )
-          }
-        />
-      </Routes>
+            }
+          />
+          <Route path="/events" element={<EventsPage />} />
+          <Route path="/rules" element={<RulesPage />} />
+          <Route path="/verify" element={<VerificationPage />} />
+          <Route path="*" element={<Navigate to="/" />} />
+        </Routes>
       </AppContainer>
     </Router>
   );

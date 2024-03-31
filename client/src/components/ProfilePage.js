@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import axios from 'axios';
 import { CategoryScale } from 'chart.js';
 import { Chart as ChartJS } from 'chart.js/auto';
@@ -7,6 +7,7 @@ import PlaytimeChart from './charts/PlaytimeChart';
 import BlocksMinedChart from './charts/BlocksMinedChart';
 import AccountLogo from '../assets/AccountLogo.png';
 import styled from 'styled-components';
+import { AuthContext } from '../contexts/AuthContext';
 
 ChartJS.register(CategoryScale);
 
@@ -17,7 +18,7 @@ const LogoImage = styled.img`
 `;
 
 function ProfilePage() {
-  const username = localStorage.getItem('username');
+  const { username } = useContext(AuthContext);
   const [blocksMined, setBlocksMined] = useState([]);
   const [playtimes, setPlaytimes] = useState([]);
   const [entityMap, setEntityMap] = useState([]);

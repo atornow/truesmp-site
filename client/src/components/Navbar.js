@@ -1,6 +1,8 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import styled from 'styled-components';
+import { AuthContext } from '../contexts/AuthContext';
+import { useNavigate } from 'react-router-dom';
 
 const Nav = styled.nav`
   display: flex;
@@ -40,14 +42,13 @@ const LogoutButton = styled.button`
 `;
 
 function Navbar() {
+  const { isAuthenticated, logout } = useContext(AuthContext);
   const location = useLocation();
-  const isAuthenticated = localStorage.getItem('token');
+  const navigate = useNavigate();
+
   const handleLogout = () => {
-    localStorage.removeItem('token');
-    localStorage.removeItem('username');
-    // Clear all data from local storage
-    localStorage.clear();
-    window.location.reload();
+    logout();
+    navigate('/'); // Navigate to the landing page after logout
   };
 
   return (
@@ -55,9 +56,7 @@ function Navbar() {
       <NavLink to="/" active={location.pathname === '/'}>Home</NavLink>
       <NavLink to="/events" active={location.pathname === '/events'}>Events</NavLink>
       <NavLink to="/rules" active={location.pathname === '/rules'}>Rules</NavLink>
-      {isAuthenticated && (
-        <LogoutButton onClick={handleLogout}>Log Out</LogoutButton>
-      )}
+      {isAuthenticated && <LogoutButton onClick={handleLogout}>Log Out</LogoutButton>}
     </Nav>
   );
 }
