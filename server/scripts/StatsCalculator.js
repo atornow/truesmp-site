@@ -7,11 +7,13 @@ async function getStats(username, mapSize, action, lookback) {
     const [rows] = await connection.execute(
       `SELECT
          TYPE,
-         SUM(CASE WHEN time >= UNIX_TIMESTAMP(DATE_SUB(NOW(), INTERVAL ? SECOND)) AND action = ? THEN 1 ELSE 0 END) AS type_count
+         SUM(CASE WHEN s4_coreprotect.co_block.time >= UNIX_TIMESTAMP(DATE_SUB(NOW(), INTERVAL ? SECOND)) AND action = ? THEN 1 ELSE 0 END) AS type_count
        FROM
          s4_coreprotect.co_block
+       JOIN
+         s4_coreprotect.co_user ON s4_coreprotect.co_block.user = s4_coreprotect.co_user.rowid
        WHERE
-         user = (SELECT rowid FROM s4_coreprotect.co_user WHERE user = ?)
+         s4_coreprotect.co_user.user = ?
          AND TYPE <= ?
        GROUP BY
          TYPE
