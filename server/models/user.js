@@ -28,6 +28,10 @@ module.exports = (sequelize, DataTypes) => {
     playtimes: {
       type: DataTypes.ARRAY(DataTypes.INTEGER),
     },
+    lastUpdate: {
+      type: DataTypes.DATE,
+      defaultValue: new Date(0),
+    },
     entitiesKilled: {
       type: DataTypes.ARRAY(DataTypes.INTEGER),
     }

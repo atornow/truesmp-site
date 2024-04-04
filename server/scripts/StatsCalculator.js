@@ -8,13 +8,13 @@ const coreProtectDBConfig = {
   database: process.env.COREPROTECT_DB_NAME,
 };
 
-async function getStats(username, mapSize, action) {
+async function getStats(username, mapSize, action, lookback) {
   const connection = await mysql.createConnection(coreProtectDBConfig);
   try {
     const [rows] = await connection.execute(
       `SELECT
          TYPE,
-         SUM(CASE WHEN time >= UNIX_TIMESTAMP(DATE_SUB(NOW(), INTERVAL 1 DAY)) AND action = ? THEN 1 ELSE 0 END) AS type_count
+         SUM(CASE WHEN time >= UNIX_TIMESTAMP(DATE_SUB(NOW(), INTERVAL ? SECOND)) AND action = ? THEN 1 ELSE 0 END) AS type_count
        FROM
          s4_coreprotect.co_block
        WHERE
@@ -24,7 +24,7 @@ async function getStats(username, mapSize, action) {
          TYPE
        ORDER BY
          TYPE;`,
-      [action, username, mapSize]
+      [lookback, action, username, mapSize]
     );
 
     const result = Array(mapSize + 1).fill(0); // Initialize an array of size mapSize + 1 with 0 values

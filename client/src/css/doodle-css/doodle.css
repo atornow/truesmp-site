@@ -16,6 +16,7 @@
 }
 
 .doodle fieldset * {
+
   max-width: calc(100vw - 100px);
 }
 
@@ -45,14 +46,14 @@
 
 .doodle .border, .doodle-border {
   border-style: solid;
-  border-width: 4px 4px 4px 4px;
-  border-image: url(button.svg) 5 5 5 5 stretch stretch;
+  border-width: 16px;
+  border-image: url(button.svg) 20 stretch stretch;
 }
 
-.doodle .border-icon, .doodle-border-icon {
+.doodle .border-1, .doodle-border-1 {
   border-style: solid;
-  border-width: 4px 4px 4px 4px;
-  border-image: url(smpIcon.svg) 5 5 5 5 stretch stretch;
+  border-width: 4px;
+  border-image: url(button-1.svg) 5 stretch stretch;
 }
 
 .doodle .border-box, .doodle-border-box {
@@ -62,15 +63,10 @@
 }
 
 .doodle button, .doodle input, .doodle select {
+  border-spacing: 200px;
   border-style: solid;
   border-width: 2px 2px 2px 2px;
   border-image: url(button.svg) 5 5 5 5 stretch stretch;
-}
-
-.doodle button.icon, .doodle input.icon, .doodle select.icon {
-  border-style: solid;
-  border-width: 2px 2px 2px 2px;
-  border-image: url(smpIcon.svg) 5 5 5 5 stretch stretch;
 }
 
 .doodle button {
@@ -125,13 +121,6 @@
   border-image: url(button.svg) 3 3 3 3 stretch stretch;
 }
 
-.doodle img.icon {
-  border-radius: 3px;
-  border-style: solid;
-  border-width: 3px 3px 3px 3px;
-  border-image: url(smpIcon.svg) 3 3 3 3 stretch stretch;
-}
-
 .doodle select {
   appearance: none;
   padding-right: 1.5em;
@@ -156,19 +145,9 @@
   border-image: url(checkbox.svg) 6 6 6 6 stretch stretch;
 }
 
-.doodle input[type="checkbox"].icon {
-  border-width: 6px 6px 6px 6px;
-  border-image: url(smpIcon.svg) 6 6 6 6 stretch stretch;
-}
-
 .doodle input[type="radio"] {
   border-width: 16px 16px 16px 16px;
   border-image: url(radio.svg) 16 16 16 16 stretch stretch;
-}
-
-.doodle input[type="radio"].icon {
-  border-width: 16px 16px 16px 16px;
-  border-image: url(smpIcon.svg) 16 16 16 16 stretch stretch;
 }
 
 .doodle input[type="checkbox"], .doodle input[type="radio"] {

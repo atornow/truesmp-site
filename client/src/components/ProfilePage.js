@@ -15,6 +15,7 @@ const LogoImage = styled.img`
   width: 50px;
   height: 50px;
   margin-right: 1rem;
+  position: relative;
 `;
 
 function ProfilePage() {
@@ -70,7 +71,7 @@ function ProfilePage() {
     <div style={{ display: 'flex', flexDirection: 'column', height: '100vh' }}>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '1rem' }}>
         <div style={{ display: 'flex', alignItems: 'center' }}>
-          <LogoImage src={AccountLogo} alt="Account Logo" className="border doodle-border-icon" />
+          <LogoImage src={AccountLogo} alt="Account Logo" className="border doodle-border-1" />
           <h2>Welcome, {username}!</h2>
         </div>
       </div>
