@@ -1,15 +1,8 @@
 const mysql = require('mysql2/promise');
-
-const coreProtectDBConfig = {
-  host: process.env.COREPROTECT_DB_HOST,
-  port: process.env.COREPROTECT_DB_PORT,
-  user: process.env.COREPROTECT_DB_USER,
-  password: process.env.COREPROTECT_DB_PASSWORD,
-  database: process.env.COREPROTECT_DB_NAME,
-};
+const pool = require('../db');
 
 async function getPlaytime(username) {
-  const connection = await mysql.createConnection(coreProtectDBConfig);
+  const connection = await pool.promise().getConnection();
   try {
     const [rows] = await connection.execute(
       `SELECT
@@ -56,7 +49,7 @@ async function getPlaytime(username) {
     console.error(error);
     return [];
   } finally {
-    await connection.end();
+    connection.release();
   }
 }
 

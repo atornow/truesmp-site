@@ -17,7 +17,7 @@ app.use('/api/stats', statsRoutes);
 
 async function createDefaultUser() {
   try {
-    const username = 'RamenLover';
+    const username = 'lsnaz';
     const password = 'test';
 
     // Check if the user already exists

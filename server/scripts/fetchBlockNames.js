@@ -1,15 +1,8 @@
 const mysql = require('mysql2/promise');
-
-const coreProtectDBConfig = {
-  host: process.env.COREPROTECT_DB_HOST,
-  port: process.env.COREPROTECT_DB_PORT,
-  user: process.env.COREPROTECT_DB_USER,
-  password: process.env.COREPROTECT_DB_PASSWORD,
-  database: process.env.COREPROTECT_DB_NAME,
-};
+const pool = require('../db');
 
 async function fetchBlockNames() {
-  const connection = await mysql.createConnection(coreProtectDBConfig);
+  const connection = await pool.promise().getConnection();
   try {
     const [rows] = await connection.execute(
       'SELECT id - 1 AS id, material FROM s4_coreprotect.co_material_map ORDER BY id;'
@@ -21,7 +14,7 @@ async function fetchBlockNames() {
     console.error('Error fetching block names:', error);
     return [];
   } finally {
-    await connection.end();
+    connection.release();
   }
 }
 
