@@ -5,6 +5,7 @@ import { Chart as ChartJS } from 'chart.js/auto';
 import EntitiesKilledChart from './charts/EntitiesKilledChart';
 import PlaytimeChart from './charts/PlaytimeChart';
 import BlocksMinedChart from './charts/BlocksMinedChart';
+import TopDiamondMinersChart from './charts/TopDiamondMinersChart';
 import AccountLogo from '../assets/AccountLogo.png';
 import styled from 'styled-components';
 import { AuthContext } from '../contexts/AuthContext';
@@ -25,6 +26,7 @@ function ProfilePage() {
   const [entityMap, setEntityMap] = useState([]);
   const [blockMap, setBlockMap] = useState([]);
   const [entitiesKilled, setEntitiesKilled] = useState([]);
+  const [topDiamondMiners, setTopDiamondMiners] = useState([]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -35,12 +37,14 @@ function ProfilePage() {
           blockMapResponse,
           blocksMinedResponse,
           playtimesResponse,
+          topDiamondMinersResponse,
         ] = await Promise.all([
           axios.get(`http://localhost:3001/api/stats/${username}/entitiesKilled`),
           axios.get('http://localhost:3001/api/stats/entity-map'),
           axios.get('http://localhost:3001/api/stats/block-map'),
           axios.get(`http://localhost:3001/api/stats/${username}/blocksMined`),
           axios.get(`http://localhost:3001/api/stats/${username}/playtimes`),
+          axios.get('http://localhost:3001/api/stats/top-diamond-miners'),
         ]);
 
         setEntitiesKilled(entitiesKilledResponse.data);
@@ -48,6 +52,7 @@ function ProfilePage() {
         setBlockMap(blockMapResponse.data);
         setBlocksMined(blocksMinedResponse.data);
         setPlaytimes(playtimesResponse.data);
+        setTopDiamondMiners(topDiamondMinersResponse.data);
 
         localStorage.setItem('entityMap', JSON.stringify(entityMapResponse.data));
         localStorage.setItem('blockMap', JSON.stringify(blockMapResponse.data));
@@ -85,6 +90,11 @@ function ProfilePage() {
         <div className="border doodle-border">
           <EntitiesKilledChart entitiesKilled={entitiesKilled} entityMap={entityMap} />
         </div>
+        {topDiamondMiners.length > 0 && (
+          <div className="border doodle-border">
+            <TopDiamondMinersChart topDiamondMiners={topDiamondMiners} />
+          </div>
+        )}
       </div>
     </div>
   );

@@ -104,4 +104,29 @@ router.get('/entity-map', async (req, res) => {
   }
 });
 
+router.get('/top-diamond-miners', async (req, res) => {
+  try {
+    const blockMap = await fetchBlockNames();
+    const deepslateIndex = blockMap.indexOf('brown_shulker_box');
+    const allUsers = await users.findAll({
+      attributes: ['username', 'blocksMined', 'blocksPlaced'],
+    });
+
+    const topDiamondMiners = allUsers
+      .map((user) => ({
+        username: user.username,
+        diamondsMined:
+          ((user.blocksMined && user.blocksMined[deepslateIndex]) || 0) -
+          ((user.blocksPlaced && user.blocksPlaced[deepslateIndex]) || 0),
+      }))
+      .sort((a, b) => b.diamondsMined - a.diamondsMined)
+      .slice(0, 10);
+
+    res.json(topDiamondMiners);
+  } catch (error) {
+    console.error('Error fetching top diamond miners:', error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+});
+
 module.exports = router;
