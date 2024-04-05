@@ -23,7 +23,7 @@ function PlaytimeChart({ playtimes }) {
     datasets: [
       {
         label: 'Playtimes',
-        data: (playtimes || []).slice().reverse(),
+        data: (playtimes || []).slice(),
         borderColor: '#202020',
         backgroundColor: '#FFFFFF',
       },

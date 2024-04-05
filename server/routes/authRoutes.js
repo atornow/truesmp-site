@@ -7,6 +7,7 @@ const jwt = require('jsonwebtoken');
 const saltRounds = 10;
 const jwtSecret = process.env.JWT_SECRET;
 const { getStats } = require('../scripts/StatsCalculator');
+const { updatePlaytimes } = require('../scripts/PlaytimeCalculator');
 
 // Registration endpoint, generates token and expiration time and creates temp user.
 router.post('/register', async (req, res) => {
@@ -123,30 +124,53 @@ router.post('/login', async (req, res) => {
 });
 
 async function updateUserStats(user) {
-  const currentTime = Math.floor(Date.now() / 1000); // Current time in seconds
-  const lastUpdateTime = Math.floor(user.lastUpdate.getTime() / 1000); // Last update time in seconds
+  const currentDate = new Date().toISOString().split('T')[0];
+  const lastUpdateDate = user.lastUpdate.toISOString().split('T')[0];
+  const updatedPlaytimes = await updatePlaytimes(user.username, lastUpdateDate, user.playtimes);
+
+  const currentTime = Math.floor(Date.now() / 1000);
+  const lastUpdateTime = Math.floor(user.lastUpdate.getTime() / 1000);
   const lookback = currentTime - lastUpdateTime;
 
   const newEntitiesKilled = await getStats(user.username, 64, 3, lookback);
   const newBlocksPlaced = await getStats(user.username, 996, 1, lookback);
   const newBlocksMined = await getStats(user.username, 996, 0, lookback);
-  await user.update({
-    entitiesKilled: user.entitiesKilled.map((value, index) => Number(value) + Number(newEntitiesKilled[index])),
-    blocksPlaced: user.blocksPlaced.map((value, index) => Number(value) + Number(newBlocksPlaced[index])),
-    blocksMined: user.blocksMined.map((value, index) => Number(value) + Number(newBlocksMined[index])),
+
+  const updatedFields = {
+    playtimes: updatedPlaytimes,
     lastUpdate: new Date(),
-  });
+  };
+
+  if (user.entitiesKilled !== null) {
+    updatedFields.entitiesKilled = user.entitiesKilled.map((value, index) => Number(value) + Number(newEntitiesKilled[index]));
+  }
+
+  if (user.blocksPlaced !== null) {
+    updatedFields.blocksPlaced = user.blocksPlaced.map((value, index) => Number(value) + Number(newBlocksPlaced[index]));
+  }
+
+  if (user.blocksMined !== null) {
+    updatedFields.blocksMined = user.blocksMined.map((value, index) => Number(value) + Number(newBlocksMined[index]));
+  }
+
+  await user.update(updatedFields);
 }
 
 async function createUserStats(user) {
-  const currentTime = Math.floor(Date.now() / 1000); // Current time in seconds
-  const lastUpdateTime = Math.floor(user.lastUpdate.getTime() / 1000); // Last update time in seconds
+  const currentDate = new Date().toISOString().split('T')[0];
+  const lastUpdateDate = user.lastUpdate.toISOString().split('T')[0];
+  const updatedPlaytimes = await updatePlaytimes(user.username, lastUpdateDate, user.playtimes || []);
+
+  const currentTime = Math.floor(Date.now() / 1000);
+  const lastUpdateTime = Math.floor(user.lastUpdate.getTime() / 1000);
   const lookback = currentTime - lastUpdateTime;
 
-  entitiesKilled = await getStats(user.username, 64, 3, lookback);
-  blocksPlaced = await getStats(user.username, 996, 1, lookback);
-  blocksMined = await getStats(user.username, 996, 0, lookback);
+  const entitiesKilled = await getStats(user.username, 64, 3, lookback);
+  const blocksPlaced = await getStats(user.username, 996, 1, lookback);
+  const blocksMined = await getStats(user.username, 996, 0, lookback);
+
   await user.update({
+    playtimes: updatedPlaytimes,
     entitiesKilled,
     blocksPlaced,
     blocksMined,

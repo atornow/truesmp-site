@@ -11,7 +11,7 @@ module.exports = (sequelize, DataTypes) => {
     },
     isVerified: {
       type: DataTypes.BOOLEAN,
-      defaultValue: false,
+      defaultValue: true, //CHANGE ME FOR PRODUCTION
     },
     verificationToken: {
       type: DataTypes.STRING,
@@ -30,7 +30,7 @@ module.exports = (sequelize, DataTypes) => {
     },
     lastUpdate: {
       type: DataTypes.DATE,
-      defaultValue: new Date(0),
+      defaultValue: new Date('2024-03-01'),
     },
     entitiesKilled: {
       type: DataTypes.ARRAY(DataTypes.INTEGER),

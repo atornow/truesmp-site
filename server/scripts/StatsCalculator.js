@@ -1,4 +1,3 @@
-const mysql = require('mysql2/promise');
 const pool = require('../db');
 
 async function getStats(username, mapSize, action, lookback) {
