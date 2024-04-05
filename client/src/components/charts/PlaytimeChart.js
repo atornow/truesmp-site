@@ -23,7 +23,7 @@ function PlaytimeChart({ playtimes }) {
     datasets: [
       {
         label: 'Playtimes',
-        data: (playtimes || []).slice(),
+        data: (playtimes || []).map((playtime) => playtime / 3600), // Convert seconds to hours
         borderColor: '#202020',
         backgroundColor: '#FFFFFF',
       },
@@ -62,6 +62,7 @@ function PlaytimeChart({ playtimes }) {
           font: {
             family: 'Xkcd',
           },
+          callback: (value) => `${value} hr`, // Add "hr" label to y-axis ticks
         },
       },
     },
@@ -69,7 +70,7 @@ function PlaytimeChart({ playtimes }) {
 
   return (
     <div style={{ flex: 2, padding: '1rem', height: '400px' }}>
-      <Line data={chartDataPlay} options={chartOptions}  />
+      <Line data={chartDataPlay} options={chartOptions} />
     </div>
   );
 }
