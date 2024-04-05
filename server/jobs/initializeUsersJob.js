@@ -1,10 +1,9 @@
-// initializeUserStats.js
-const { fetchUniqueUsers } = require('./fetchUsersFromCoreProtect');
+const { fetchUniqueUsers } = require('../scripts/fetchUsersFromCoreProtect');
 const { users } = require('../models');
-const { getStats } = require('./StatsCalculator');
-const { updatePlaytimes } = require('./PlaytimeCalculator');
+const { getStats } = require('../scripts/StatsCalculator');
+const { updatePlaytimes } = require('../scripts/PlaytimeCalculator');
 
-async function initializeUserStats() {
+async function initializeUsersJob() {
   console.log('Fetching unique users from CoreProtect');
   const uniqueUsers = await fetchUniqueUsers();
   const userPromises = uniqueUsers.map(async (username) => {
@@ -51,4 +50,4 @@ async function initializeUserStats() {
 
 
 
-module.exports = { initializeUserStats };
+module.exports = { initializeUsersJob };
