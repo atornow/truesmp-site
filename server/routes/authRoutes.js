@@ -21,7 +21,6 @@ router.post('/register', async (req, res) => {
       const verificationExpires = Date.now() + 300000; // Token expires in 5 min
 
       if (user) {
-        createUserStats(user);
         await user.update({
           password: hashedPassword,
           verificationToken: verificationToken,
