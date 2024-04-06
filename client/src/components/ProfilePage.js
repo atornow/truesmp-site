@@ -20,7 +20,7 @@ const LogoImage = styled.img`
 `;
 
 function ProfilePage() {
-  const { username } = useContext(AuthContext);
+  const { username, teamName } = useContext(AuthContext);
   const [blocksMined, setBlocksMined] = useState([]);
   const [playtimes, setPlaytimes] = useState([]);
   const [entityMap, setEntityMap] = useState([]);
@@ -78,6 +78,7 @@ function ProfilePage() {
         <div style={{ display: 'flex', alignItems: 'center' }}>
           <LogoImage src={AccountLogo} alt="Account Logo" className="border doodle-border-1" />
           <h2>Welcome, {username}!</h2>
+          <p>Team: {teamName}</p>
         </div>
       </div>
       <div style={{ display: 'flex', flexDirection: 'row', flexWrap: 'wrap' }}>

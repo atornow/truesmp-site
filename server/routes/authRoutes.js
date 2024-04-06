@@ -8,7 +8,8 @@ const saltRounds = 10;
 const jwtSecret = process.env.JWT_SECRET;
 const { getStats } = require('../scripts/StatsCalculator');
 const { updatePlaytimes } = require('../scripts/PlaytimeCalculator');
-const { fetchUUID } = require('../scripts/fetchUUID');
+const { fetchTeamName } = require('../scripts/fetchTeamName');
+const { coreProtectPool } = require('../db');
 
 // Registration endpoint, generates token and expiration time and creates temp user.
 router.post('/register', async (req, res) => {
@@ -20,16 +21,15 @@ router.post('/register', async (req, res) => {
       const hashedPassword = await bcrypt.hash(password, saltRounds);
       const verificationToken = crypto.randomBytes(3).toString('hex');
       const verificationExpires = Date.now() + 300000; // Token expires in 5 min
+      const uuid = await fetchUUIDFromCoreProtect(user.username);
 
       if (user) {
-        const uuid = await fetchUUID(user.username);
         await user.update({
           uuid,
           password: hashedPassword,
           verificationToken: verificationToken,
           verificationExpires: verificationExpires,
         });
-        console.log('YAY: ', user.uuid);
       } else {
         await users.create({
           username: username,
@@ -113,11 +113,10 @@ router.post('/login', async (req, res) => {
         jwtSecret,
         { expiresIn: '24h' }
       );
-
-      res.json({ message: "Login successful", token });
-
       // Update user stats and lastUpdate time in the background
       updateUserStats(user);
+      const teamName = await fetchTeamName(user.uuid);
+      res.json({ message: "Login successful", token, teamName });
     } else {
       res.status(401).send('Invalid username or password');
     }
@@ -125,6 +124,23 @@ router.post('/login', async (req, res) => {
     res.status(500).send(error.message);
   }
 });
+
+async function fetchUUIDFromCoreProtect(username) {
+  const connection = await coreProtectPool.promise().getConnection();
+  try {
+    const [rows] = await connection.execute(
+      'SELECT uuid FROM s4_coreprotect.co_user WHERE user = ?',
+      [username]
+    );
+
+    return rows.length > 0 ? rows[0].uuid : null;
+  } catch (error) {
+    console.error('Error fetching UUID from CoreProtect:', error);
+    return null;
+  } finally {
+    connection.release();
+  }
+}
 
 async function updateUserStats(user) {
   const currentDate = new Date().toISOString().split('T')[0];
@@ -138,10 +154,12 @@ async function updateUserStats(user) {
   const newEntitiesKilled = await getStats(user.username, 64, 3, lookback);
   const newBlocksPlaced = await getStats(user.username, 996, 1, lookback);
   const newBlocksMined = await getStats(user.username, 996, 0, lookback);
+  const uuid = await fetchUUIDFromCoreProtect(user.username);
 
   const updatedFields = {
     playtimes: updatedPlaytimes,
     lastUpdate: new Date(),
+    uuid,
   };
 
   if (user.entitiesKilled !== null) {
@@ -171,7 +189,7 @@ async function createUserStats(user) {
   const entitiesKilled = await getStats(user.username, 64, 3, lookback);
   const blocksPlaced = await getStats(user.username, 996, 1, lookback);
   const blocksMined = await getStats(user.username, 996, 0, lookback);
-  const uuid = await fetchUUID(user.username);
+  const uuid = await fetchUUIDFromCoreProtect(user.username);
 
   await user.update({
     playtimes: updatedPlaytimes,
