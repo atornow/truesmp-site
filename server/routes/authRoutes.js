@@ -8,6 +8,7 @@ const saltRounds = 10;
 const jwtSecret = process.env.JWT_SECRET;
 const { getStats } = require('../scripts/StatsCalculator');
 const { updatePlaytimes } = require('../scripts/PlaytimeCalculator');
+const { fetchUUID } = require('../scripts/fetchUUID');
 
 // Registration endpoint, generates token and expiration time and creates temp user.
 router.post('/register', async (req, res) => {
@@ -21,11 +22,14 @@ router.post('/register', async (req, res) => {
       const verificationExpires = Date.now() + 300000; // Token expires in 5 min
 
       if (user) {
+        const uuid = await fetchUUID(user.username);
         await user.update({
+          uuid,
           password: hashedPassword,
           verificationToken: verificationToken,
           verificationExpires: verificationExpires,
         });
+        console.log('YAY: ', user.uuid);
       } else {
         await users.create({
           username: username,
@@ -167,12 +171,14 @@ async function createUserStats(user) {
   const entitiesKilled = await getStats(user.username, 64, 3, lookback);
   const blocksPlaced = await getStats(user.username, 996, 1, lookback);
   const blocksMined = await getStats(user.username, 996, 0, lookback);
+  const uuid = await fetchUUID(user.username);
 
   await user.update({
     playtimes: updatedPlaytimes,
     entitiesKilled,
     blocksPlaced,
     blocksMined,
+    uuid,
     lastUpdate: new Date(),
   });
 }

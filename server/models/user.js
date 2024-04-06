@@ -5,7 +5,7 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false,
       unique: true,
     },
-    password: { // Add a password field
+    password: {
       type: DataTypes.STRING,
       allowNull: true,
     },
@@ -31,6 +31,13 @@ module.exports = (sequelize, DataTypes) => {
     lastUpdate: {
       type: DataTypes.DATE,
       defaultValue: new Date('2024-03-01'),
+    },
+    uuid: {
+      type: DataTypes.STRING,
+    },
+    teamId: {
+      type: DataTypes.STRING,
+      defaultValue: 'No Team',
     },
     entitiesKilled: {
       type: DataTypes.ARRAY(DataTypes.INTEGER),
