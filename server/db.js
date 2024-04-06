@@ -1,4 +1,3 @@
-// db.js
 const mysql = require('mysql2');
 
 const coreProtectDBConfig = {
@@ -7,9 +6,22 @@ const coreProtectDBConfig = {
   user: process.env.COREPROTECT_DB_USER,
   password: process.env.COREPROTECT_DB_PASSWORD,
   database: process.env.COREPROTECT_DB_NAME,
-  connectionLimit: 10, // Adjust the connection limit as needed
+  connectionLimit: 10,
 };
 
-const pool = mysql.createPool(coreProtectDBConfig);
+const teamsDBConfig = {
+  host: process.env.TEAMS_DB_HOST,
+  port: process.env.TEAMS_DB_PORT,
+  user: process.env.TEAMS_DB_USER,
+  password: process.env.TEAMS_DB_PASSWORD,
+  database: process.env.TEAMS_DB_NAME,
+  connectionLimit: 10,
+};
 
-module.exports = pool;
+const coreProtectPool = mysql.createPool(coreProtectDBConfig);
+const teamsPool = mysql.createPool(teamsDBConfig);
+
+module.exports = {
+  coreProtectPool,
+  teamsPool,
+};

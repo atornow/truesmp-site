@@ -4,7 +4,7 @@ const { updatePlaytimes } = require('../scripts/PlaytimeCalculator');
 const { users } = require('../models');
 
 module.exports = () => {
-  cron.schedule('*/2 * * * *', async () => {
+  cron.schedule('*/10 * * * *', async () => {
     console.log('Cron job started');
 
     const allUsers = await users.findAll();

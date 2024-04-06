@@ -1,7 +1,7 @@
-const pool = require('../db');
+const { coreProtectPool } = require('../db');
 
 async function calculatePlaytime(username, dateStr) {
-  const connection = await pool.promise().getConnection();
+  const connection = await coreProtectPool.promise().getConnection();
   try {
     console.log(`Calculating playtime for ${username} on ${dateStr}`);
 

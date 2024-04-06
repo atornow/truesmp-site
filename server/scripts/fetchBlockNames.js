@@ -1,8 +1,8 @@
 const mysql = require('mysql2/promise');
-const pool = require('../db');
+const { coreProtectPool } = require('../db');
 
 async function fetchBlockNames() {
-  const connection = await pool.promise().getConnection();
+  const connection = await coreProtectPool.promise().getConnection();
   try {
     const [rows] = await connection.execute(
       'SELECT id - 1 AS id, material FROM s4_coreprotect.co_material_map ORDER BY id;'

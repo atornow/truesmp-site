@@ -1,8 +1,7 @@
-const mysql = require('mysql2/promise');
-const pool = require('../db');
+const { coreProtectPool } = require('../db');
 
 async function fetchUniqueUsers() {
-  const connection = await pool.promise().getConnection();
+  const connection = await coreProtectPool.promise().getConnection();
   try {
     const [rows] = await connection.execute(
       'SELECT DISTINCT user FROM s4_coreprotect.co_user'

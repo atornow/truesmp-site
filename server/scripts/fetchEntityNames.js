@@ -1,8 +1,7 @@
-const mysql = require('mysql2/promise');
-const pool = require('../db');
+const { coreProtectPool } = require('../db');
 
 async function fetchEntityNames() {
-  const connection = await pool.promise().getConnection();
+  const connection = await coreProtectPool.promise().getConnection();
   try {
     const [rows] = await connection.execute(
       'SELECT id - 1 AS id, entity FROM s4_coreprotect.co_entity_map ORDER BY id;'

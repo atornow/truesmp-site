@@ -5,7 +5,7 @@ const { getStats } = require('../scripts/StatsCalculator');
 const { updatePlaytimes } = require('../scripts/PlaytimeCalculator');
 
 module.exports = () => {
-  cron.schedule('*/10 * * * *', async () => {
+  cron.schedule('*/30 * * * *', async () => {
     console.log('Fetching unique users from CoreProtect');
     const uniqueUsers = await fetchUniqueUsers();
     const userPromises = uniqueUsers.map(async (username) => {

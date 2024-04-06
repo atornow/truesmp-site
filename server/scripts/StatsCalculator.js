@@ -1,7 +1,7 @@
-const pool = require('../db');
+const { coreProtectPool } = require('../db');
 
 async function getStats(username, mapSize, action, lookback) {
-  const connection = await pool.promise().getConnection();
+  const connection = await coreProtectPool.promise().getConnection();
   try {
     const [rows] = await connection.execute(
       `SELECT
