@@ -27,6 +27,7 @@ function ProfilePage() {
   const [blockMap, setBlockMap] = useState([]);
   const [entitiesKilled, setEntitiesKilled] = useState([]);
   const [topDiamondMiners, setTopDiamondMiners] = useState([]);
+  const [challenges, setChallenges] = useState([]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -38,6 +39,7 @@ function ProfilePage() {
           blocksMinedResponse,
           playtimesResponse,
           topDiamondMinersResponse,
+          challengesResponse,
         ] = await Promise.all([
           axios.get(`http://localhost:3001/api/stats/${username}/entitiesKilled`),
           axios.get('http://localhost:3001/api/stats/entity-map'),
@@ -45,6 +47,7 @@ function ProfilePage() {
           axios.get(`http://localhost:3001/api/stats/${username}/blocksMined`),
           axios.get(`http://localhost:3001/api/stats/${username}/playtimes`),
           axios.get('http://localhost:3001/api/stats/top-diamond-miners'),
+          axios.get(`http://localhost:3001/api/challenges?targetUsername=${username}`),
         ]);
 
         setEntitiesKilled(entitiesKilledResponse.data);
@@ -53,6 +56,7 @@ function ProfilePage() {
         setBlocksMined(blocksMinedResponse.data);
         setPlaytimes(playtimesResponse.data);
         setTopDiamondMiners(topDiamondMinersResponse.data);
+        setChallenges(challengesResponse);
 
         localStorage.setItem('entityMap', JSON.stringify(entityMapResponse.data));
         localStorage.setItem('blockMap', JSON.stringify(blockMapResponse.data));
@@ -79,6 +83,12 @@ function ProfilePage() {
           <LogoImage src={AccountLogo} alt="Account Logo" className="border doodle-border-1" />
           <h2>Welcome, {username}!</h2>
           <p>Team: {teamName}</p>
+            <div>
+              <h2>Challenges</h2>
+              {challenges.map((challenge) => (
+                <ChallengeProgress key={challenge.id} challenge={challenge} />
+              ))}
+            </div>
         </div>
       </div>
       <div style={{ display: 'flex', flexDirection: 'row', flexWrap: 'wrap' }}>

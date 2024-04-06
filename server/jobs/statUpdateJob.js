@@ -2,6 +2,7 @@ const cron = require('node-cron');
 const { getStats } = require('../scripts/StatsCalculator');
 const { updatePlaytimes } = require('../scripts/PlaytimeCalculator');
 const { users } = require('../models');
+const { updateChallengeProgress } = require('../scripts/updateChallengeProgress');
 
 module.exports = () => {
   cron.schedule('*/10 * * * *', async () => {
@@ -33,8 +34,16 @@ module.exports = () => {
         });
       }
     });
-
     await Promise.all(updatePromises);
+
+    const activeChallenges = await challenges.findAll({
+        where: {
+          startDate: { [Op.lte]: new Date() },
+          endDate: { [Op.gte]: new Date() },
+        },
+      });
+    await Promise.all(activeChallenges.map((challenge) => updateChallengeProgress(challenge.id)));
+
     console.log('Cron job completed');
   });
 };
