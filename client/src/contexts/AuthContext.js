@@ -11,11 +11,13 @@ export const AuthProvider = ({ children }) => {
   useEffect(() => {
     const storedToken = localStorage.getItem('token');
     const storedUsername = localStorage.getItem('username');
+    const storedTeamName = localStorage.getItem('teamName');
 
     if (storedToken && storedUsername) {
       setIsAuthenticated(true);
       setToken(storedToken);
       setUsername(storedUsername);
+      setTeamName(storedTeamName);
     }
   }, []);
 
@@ -23,6 +25,7 @@ export const AuthProvider = ({ children }) => {
       setIsAuthenticated(true);
       setToken(token);
       setUsername(username);
+      console.log('AuthContext - login - teamName:', teamName);
       setTeamName(teamName);
       localStorage.setItem('token', token);
       localStorage.setItem('username', username);
@@ -35,7 +38,6 @@ export const AuthProvider = ({ children }) => {
     setUsername(null);
     localStorage.removeItem('token');
     localStorage.removeItem('username');
-    localStorage.setItem('teamName', teamName);
   };
 
   return (
