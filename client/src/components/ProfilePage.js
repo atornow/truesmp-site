@@ -57,7 +57,7 @@ function ProfilePage() {
         setBlocksMined(blocksMinedResponse.data);
         setPlaytimes(playtimesResponse.data);
         setTopDiamondMiners(topDiamondMinersResponse.data);
-        setChallenges(challengesResponse.data);
+        setChallenges(challengesResponse.data.filter(challenge => challenge.categoryId === 2)); // Filter challenges with categoryId === 2
 
         localStorage.setItem('entityMap', JSON.stringify(entityMapResponse.data));
         localStorage.setItem('blockMap', JSON.stringify(blockMapResponse.data));
@@ -66,28 +66,8 @@ function ProfilePage() {
       }
     };
 
-    const fetchChallenges = async () => {
-      try {
-        const response = await axios.get(`http://localhost:3001/api/challenges?targetUsername=${username}`);
-        setChallenges(response.data);
-      } catch (error) {
-        console.error('Error fetching challenges:', error);
-      }
-    };
-
-    fetchChallenges();
-
-    const storedEntityMap = localStorage.getItem('entityMap');
-    const storedBlockMap = localStorage.getItem('blockMap');
-
-    if (storedEntityMap && storedBlockMap) {
-      setEntityMap(JSON.parse(storedEntityMap));
-      setBlockMap(JSON.parse(storedBlockMap));
-    }
-
     fetchData();
   }, [username]);
-
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', height: '100vh' }}>
@@ -96,12 +76,12 @@ function ProfilePage() {
           <LogoImage src={AccountLogo} alt="Account Logo" className="border doodle-border-1" />
           <h2>Welcome, {username}!</h2>
           <p>Team: {teamName}</p>
-            <div>
-              <h2>Challenges</h2>
-              {challenges.map((challenge) => (
-                <ChallengeProgress key={challenge.id} challenge={challenge} />
-              ))}
-            </div>
+          <div>
+            <h2>Challenges</h2>
+            {challenges.map((challenge) => (
+              <ChallengeProgress key={challenge.id} challenge={challenge} />
+            ))}
+          </div>
         </div>
       </div>
       <div style={{ display: 'flex', flexDirection: 'row', flexWrap: 'wrap' }}>

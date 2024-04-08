@@ -29,8 +29,11 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false,
     },
     active: {
-      type:DataTypes.BOOLEAN,
+      type: DataTypes.BOOLEAN,
       defaultValue: true,
+    },
+    categoryId: {
+      type: DataTypes.INTEGER,
     },
     dataName: {
       type: DataTypes.STRING,

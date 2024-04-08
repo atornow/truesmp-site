@@ -5,7 +5,6 @@ const { sequelize } = require('./models');
 const statUpdateJob = require('./jobs/statUpdateJob');
 const userFetchJob = require('./jobs/userFetchJob');
 const { initializeUsersJob } = require('./jobs/initializeUsersJob');
-const challengeCreationJob = require('./jobs/challengeCreationJob');
 const authRoutes = require('./routes/authRoutes');
 const statsRoutes = require('./routes/statsRoutes');
 const challengeRoutes = require('./routes/challengeRoutes');
@@ -24,7 +23,6 @@ sequelize.sync().then(() => {
   initializeUsersJob()
     .then(() => {
       // Start the cron jobs after initialization is done
-      challengeCreationJob();
       statUpdateJob();
       userFetchJob();
     })

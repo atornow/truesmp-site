@@ -4,6 +4,7 @@ import styled, { createGlobalStyle } from 'styled-components';
 import LoginForm from './components/LoginForm';
 import RegisterForm from './components/RegisterForm';
 import ProfilePage from './components/ProfilePage';
+import AdminPage from './components/AdminPage';
 import ProtectedRoute from './components/ProtectedRoute';
 import Navbar from './components/Navbar';
 import EventsPage from './components/EventsPage';
@@ -29,7 +30,7 @@ const AppContainer = styled.div`
 `;
 
 function App() {
-  const { isAuthenticated } = useContext(AuthContext);
+  const { isAuthenticated, username } = useContext(AuthContext);
 
   return (
     <Router>
@@ -65,6 +66,14 @@ function App() {
           <Route path="/rules" element={<RulesPage />} />
           <Route path="/verify" element={<VerificationPage />} />
           <Route path="*" element={<Navigate to="/" />} />
+          <Route
+            path="/admin"
+            element={
+              <ProtectedRoute>
+                {username === 'RamenLover' ? <AdminPage /> : <Navigate to="/profile" />}
+              </ProtectedRoute>
+            }
+          />
         </Routes>
       </AppContainer>
     </Router>

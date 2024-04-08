@@ -1,28 +1,28 @@
 const { challenges, users } = require('../models');
 const { fetchEntityNames } = require('./fetchEntityNames');
 
-async function createChallenge(amountGoal, startDate, endDate, description, dataName, targetUsername) {
+async function createChallenges(description, entityName, amountToKill, startDate, endDate, categoryId) {
   try {
-    const user = await users.findOne({ where: { username: targetUsername } });
+    const allUsers = await users.findAll();
     const entityMap = await fetchEntityNames();
-    const entityIndex = entityMap.indexOf(dataName);
-
-    const initialProgress = user.entitiesKilled[entityIndex] || 0;
-
-    const challenge = await challenges.create({
-      amountGoal,
-      startDate,
-      endDate,
-      description,
-      dataName,
-      targetUsername,
-      initialProgress,
+    const challengePromises = allUsers.map(async (user) => {
+      const initialProgress = user.entitiesKilled[entityMap.indexOf(entityName) + 1] || 0;
+      await challenges.create({
+        amountGoal: amountToKill,
+        startDate,
+        endDate,
+        description,
+        dataName: entityName,
+        targetUsername: user.username,
+        initialProgress,
+        categoryId,
+      });
     });
-    return challenge;
+    await Promise.all(challengePromises);
   } catch (error) {
-    console.error('Error creating challenge:', error);
+    console.error('Error creating challenges:', error);
     throw error;
   }
 }
 
-module.exports = { createChallenge };
+module.exports = { createChallenges };

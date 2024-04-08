@@ -6,7 +6,7 @@ const { updateChallengeProgress } = require('../scripts/updateChallengeProgress'
 const { Op } = require('sequelize');
 
 module.exports = () => {
-  cron.schedule('*/2 * * * *', async () => {
+  cron.schedule('*/5 * * * *', async () => {
     console.log('Cron job started');
 
     const allUsers = await users.findAll();

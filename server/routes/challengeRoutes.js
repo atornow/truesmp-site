@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const { challenges } = require('../models');
-const { createChallenge } = require('../scripts/createChallenge');
+const { createChallenges } = require('../scripts/createChallenge');
 
 router.post('/', async (req, res) => {
   try {
@@ -23,6 +23,17 @@ router.get('/', async (req, res) => {
     res.json(challenge);
   } catch (error) {
     console.error('Error fetching challenges:', error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+});
+
+router.post('/admin', async (req, res) => {
+  try {
+    const { description, entityName, amountToKill, startDate, endDate, categoryId } = req.body;
+    await createChallenges(description, entityName, amountToKill, startDate, endDate, categoryId);
+    res.status(201).json({ message: 'Challenges created successfully' });
+  } catch (error) {
+    console.error('Error creating challenges:', error);
     res.status(500).json({ message: 'Internal server error' });
   }
 });

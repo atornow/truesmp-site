@@ -42,7 +42,7 @@ const LogoutButton = styled.button`
 `;
 
 function Navbar() {
-  const { isAuthenticated, logout } = useContext(AuthContext);
+  const { isAuthenticated, logout, username } = useContext(AuthContext);
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -57,6 +57,9 @@ function Navbar() {
       <NavLink to="/events" active={location.pathname === '/events'}>Events</NavLink>
       <NavLink to="/rules" active={location.pathname === '/rules'}>Rules</NavLink>
       {isAuthenticated && <LogoutButton onClick={handleLogout}>Log Out</LogoutButton>}
+      {isAuthenticated && username === 'RamenLover' && (
+        <NavLink to="/admin" active={location.pathname === '/admin'}>Admin</NavLink>
+      )}
     </Nav>
   );
 }
