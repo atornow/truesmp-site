@@ -1,13 +1,21 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import axios from 'axios';
+import { AuthContext } from '../contexts/AuthContext';
+
+function formatDate(dateString) {
+  const options = { year: 'numeric', month: 'long', day: 'numeric' };
+  return new Date(dateString).toLocaleDateString(undefined, options);
+}
 
 function ChallengeProgress({ challenge }) {
+  console.log('Challenge data:', challenge);
   const [progress, setProgress] = useState(0);
+  const { username } = useContext(AuthContext);
 
   useEffect(() => {
     const fetchProgress = async () => {
       try {
-        const response = await axios.get(`/api/challenges/${challenge.id}`);
+        const response = await axios.get(`http://localhost:3001/api/challenges?targetUsername=${username}`);
         setProgress(response.data.currentProgress);
       } catch (error) {
         console.error('Error fetching challenge progress:', error);
@@ -20,7 +28,7 @@ function ChallengeProgress({ challenge }) {
     return () => clearInterval(interval);
   }, [challenge.id]);
 
-  const progressPercentage = Math.min((progress / challenge.amountGoal) * 100, 100);
+  const progressPercentage = Math.min((challenge.currentProgress / challenge.amountGoal) * 100, 100);
 
   return (
     <div>
@@ -35,7 +43,10 @@ function ChallengeProgress({ challenge }) {
         />
       </div>
       <p>
-        Progress: {progress} / {challenge.amountGoal}
+        Progress: {challenge.currentProgress} / {challenge.amountGoal}
+      </p>
+      <p>
+        {formatDate(challenge.startDate)} – {formatDate(challenge.endDate)}
       </p>
     </div>
   );

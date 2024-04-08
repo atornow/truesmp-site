@@ -40,9 +40,6 @@ router.post('/register', async (req, res) => {
         const user = await users.findOne({ where: { username } });
         createUserStats(user);
       }
-
-
-
       res.json({
         message: 'Please run /verify in-game within 5 minutes to link account.',
         token: verificationToken,

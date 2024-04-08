@@ -9,6 +9,7 @@ import TopDiamondMinersChart from './charts/TopDiamondMinersChart';
 import AccountLogo from '../assets/AccountLogo.png';
 import styled from 'styled-components';
 import { AuthContext } from '../contexts/AuthContext';
+import ChallengeProgress from './ChallengeProgress';
 
 ChartJS.register(CategoryScale);
 
@@ -56,7 +57,7 @@ function ProfilePage() {
         setBlocksMined(blocksMinedResponse.data);
         setPlaytimes(playtimesResponse.data);
         setTopDiamondMiners(topDiamondMinersResponse.data);
-        setChallenges(challengesResponse);
+        setChallenges(challengesResponse.data);
 
         localStorage.setItem('entityMap', JSON.stringify(entityMapResponse.data));
         localStorage.setItem('blockMap', JSON.stringify(blockMapResponse.data));
@@ -64,6 +65,17 @@ function ProfilePage() {
         console.error('Error fetching data:', error);
       }
     };
+
+    const fetchChallenges = async () => {
+      try {
+        const response = await axios.get(`http://localhost:3001/api/challenges?targetUsername=${username}`);
+        setChallenges(response.data);
+      } catch (error) {
+        console.error('Error fetching challenges:', error);
+      }
+    };
+
+    fetchChallenges();
 
     const storedEntityMap = localStorage.getItem('entityMap');
     const storedBlockMap = localStorage.getItem('blockMap');
@@ -75,6 +87,7 @@ function ProfilePage() {
 
     fetchData();
   }, [username]);
+
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', height: '100vh' }}>

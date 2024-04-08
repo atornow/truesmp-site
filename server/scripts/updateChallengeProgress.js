@@ -9,7 +9,7 @@ async function updateChallengeProgress(challengeId) {
     const entityMap = await fetchEntityNames();
     const entityIndex = entityMap.indexOf(challenge.dataName);
 
-    const currentProgress = user.entitiesKilled[entityIndex] || 0;
+    const currentProgress = user.entitiesKilled[entityIndex + 1] || 0;
     const progressDifference = currentProgress - challenge.initialProgress;
 
     await challenge.update({ currentProgress: progressDifference });

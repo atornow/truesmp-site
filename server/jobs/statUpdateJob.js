@@ -1,11 +1,12 @@
 const cron = require('node-cron');
 const { getStats } = require('../scripts/StatsCalculator');
 const { updatePlaytimes } = require('../scripts/PlaytimeCalculator');
-const { users } = require('../models');
+const { challenges, users } = require('../models');
 const { updateChallengeProgress } = require('../scripts/updateChallengeProgress');
+const { Op } = require('sequelize');
 
 module.exports = () => {
-  cron.schedule('*/10 * * * *', async () => {
+  cron.schedule('*/2 * * * *', async () => {
     console.log('Cron job started');
 
     const allUsers = await users.findAll();
