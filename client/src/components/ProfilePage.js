@@ -10,6 +10,7 @@ import AccountLogo from '../assets/AccountLogo.png';
 import styled from 'styled-components';
 import { AuthContext } from '../contexts/AuthContext';
 import ChallengeProgress from './ChallengeProgress';
+import OnlinePlayerCount from './OnlinePlayerCount';
 
 ChartJS.register(CategoryScale);
 
@@ -57,7 +58,7 @@ function ProfilePage() {
         setBlocksMined(blocksMinedResponse.data);
         setPlaytimes(playtimesResponse.data);
         setTopDiamondMiners(topDiamondMinersResponse.data);
-        setChallenges(challengesResponse.data.filter(challenge => challenge.categoryId === 2)); // Filter challenges with categoryId === 2
+        setChallenges(challengesResponse.data.filter(challenge => challenge.categoryId === 7)); // Filter challenges with categoryId === 2
 
         localStorage.setItem('entityMap', JSON.stringify(entityMapResponse.data));
         localStorage.setItem('blockMap', JSON.stringify(blockMapResponse.data));
@@ -81,6 +82,7 @@ function ProfilePage() {
             {challenges.map((challenge) => (
               <ChallengeProgress key={challenge.id} challenge={challenge} />
             ))}
+            <OnlinePlayerCount />
           </div>
         </div>
       </div>

@@ -10,6 +10,8 @@
     "chart.js": "^4.4.2",
     "doodle.css": "^0.0.2",
     "framer-motion": "^11.0.22",
+    "mc-ping-updated": "^0.1.1",
+    "net": "^1.0.2",
     "react": "^18.2.0",
     "react-chartjs-2": "^5.2.0",
     "react-dom": "^18.2.0",
