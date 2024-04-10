@@ -1,15 +1,18 @@
 const { challenges, users } = require('../models');
 const { fetchEntityNames } = require('./fetchEntityNames');
+const { fetchBlockNames } = require('./fetchBlockNames');
 
 async function updateChallengeProgress(challengeId) {
   try {
     const challenge = await challenges.findByPk(challengeId);
     const user = await users.findOne({ where: { username: challenge.targetUsername } });
 
-    const entityMap = await fetchEntityNames();
-    const entityIndex = entityMap.indexOf(challenge.dataName);
+    const dataMap = challenge.dataType === 'entity' ? await fetchEntityNames() : await fetchBlockNames();
+    const dataIndex = dataMap.indexOf(challenge.dataName);
 
-    const currentProgress = user.entitiesKilled[entityIndex + 1] || 0;
+    const currentProgress = challenge.dataType === 'entity'
+      ? user.entitiesKilled[dataIndex + 1] || 0
+      : user.blocksMined[dataIndex + 1] || 0;
     const progressDifference = currentProgress - challenge.initialProgress;
 
     await challenge.update({ currentProgress: progressDifference });

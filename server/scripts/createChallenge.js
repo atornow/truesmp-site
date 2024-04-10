@@ -1,21 +1,26 @@
 const { challenges, users } = require('../models');
 const { fetchEntityNames } = require('./fetchEntityNames');
+const { fetchBlockNames } = require('./fetchBlockNames');
 
-async function createChallenges(description, entityName, amountToKill, startDate, endDate, categoryId) {
+async function createChallenges(description, dataName, amountGoal, startDate, endDate, categoryId, dataType, points) {
   try {
     const allUsers = await users.findAll();
-    const entityMap = await fetchEntityNames();
+    const dataMap = dataType === 'entity' ? await fetchEntityNames() : await fetchBlockNames();
     const challengePromises = allUsers.map(async (user) => {
-      const initialProgress = user.entitiesKilled[entityMap.indexOf(entityName) + 1] || 0;
+      const initialProgress = dataType === 'entity'
+        ? user.entitiesKilled[dataMap.indexOf(dataName) + 1] || 0
+        : user.blocksMined[dataMap.indexOf(dataName) + 1] || 0;
       await challenges.create({
-        amountGoal: amountToKill,
+        amountGoal,
         startDate,
         endDate,
         description,
-        dataName: entityName,
+        dataName,
         targetUsername: user.username,
         initialProgress,
         categoryId,
+        dataType,
+        points,
       });
     });
     await Promise.all(challengePromises);

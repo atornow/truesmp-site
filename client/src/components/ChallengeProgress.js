@@ -48,6 +48,7 @@ function ChallengeProgress({ challenge }) {
       <p>
         {formatDate(challenge.startDate)} – {formatDate(challenge.endDate)}
       </p>
+      <p>Points: {challenge.points}</p>
     </div>
   );
 }

@@ -29,8 +29,8 @@ router.get('/', async (req, res) => {
 
 router.post('/admin', async (req, res) => {
   try {
-    const { description, entityName, amountToKill, startDate, endDate, categoryId } = req.body;
-    await createChallenges(description, entityName, amountToKill, startDate, endDate, categoryId);
+    const { description, dataName, amountGoal, startDate, endDate, categoryId, dataType, points } = req.body;
+    await createChallenges(description, dataName, amountGoal, startDate, endDate, categoryId, dataType, points);
     res.status(201).json({ message: 'Challenges created successfully' });
   } catch (error) {
     console.error('Error creating challenges:', error);

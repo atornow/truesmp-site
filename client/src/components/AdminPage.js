@@ -3,30 +3,36 @@ import axios from 'axios';
 
 function AdminPage() {
   const [description, setDescription] = useState('');
-  const [entityName, setEntityName] = useState('');
-  const [amountToKill, setAmountToKill] = useState(0);
+  const [dataName, setDataName] = useState('');
+  const [amountGoal, setAmountGoal] = useState(0);
   const [startDate, setStartDate] = useState('');
   const [endDate, setEndDate] = useState('');
   const [categoryId, setCategoryId] = useState('');
+  const [dataType, setDataType] = useState('entity');
+  const [points, setPoints] = useState(0);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
       await axios.post('http://localhost:3001/api/challenges/admin', {
         description,
-        entityName,
-        amountToKill,
+        dataName,
+        amountGoal,
         startDate,
         endDate,
         categoryId,
+        dataType,
+        points,
       });
       // Reset form fields and show success message
       setDescription('');
-      setEntityName('');
-      setAmountToKill(0);
+      setDataName('');
+      setAmountGoal(0);
       setStartDate('');
       setEndDate('');
       setCategoryId('');
+      setDataType('entity');
+      setPoints(0);
       alert('Challenge created successfully!');
     } catch (error) {
       console.error('Error creating challenges:', error);
@@ -51,22 +57,34 @@ function AdminPage() {
           />
         </div>
         <div>
-          <label htmlFor="entityName">Entity Name:</label>
+          <label htmlFor="dataName">Data Name:</label>
           <input
             type="text"
-            id="entityName"
-            value={entityName}
-            onChange={(e) => setEntityName(e.target.value)}
+            id="dataName"
+            value={dataName}
+            onChange={(e) => setDataName(e.target.value)}
             required
           />
         </div>
         <div>
-          <label htmlFor="amountToKill">Amount to Kill:</label>
+            <label htmlFor="dataType">Data Type:</label>
+            <select
+              id="dataType"
+              value={dataType}
+              onChange={(e) => setDataType(e.target.value)}
+              required
+            >
+              <option value="entity">Entity</option>
+              <option value="block">Block</option>
+            </select>
+          </div>
+        <div>
+          <label htmlFor="amountGoal">Amount of thing:</label>
           <input
             type="number"
-            id="amountToKill"
-            value={amountToKill}
-            onChange={(e) => setAmountToKill(parseInt(e.target.value))}
+            id="amountGoal"
+            value={amountGoal}
+            onChange={(e) => setAmountGoal(parseInt(e.target.value))}
             required
           />
         </div>
@@ -100,6 +118,16 @@ function AdminPage() {
             required
           />
         </div>
+        <div>
+            <label htmlFor="points">Points:</label>
+            <input
+              type="number"
+              id="points"
+              value={points}
+              onChange={(e) => setPoints(parseInt(e.target.value))}
+              required
+            />
+          </div>
         <button type="submit">Create Challenges</button>
       </form>
     </div>

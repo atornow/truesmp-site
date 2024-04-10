@@ -35,6 +35,13 @@ module.exports = (sequelize, DataTypes) => {
     categoryId: {
       type: DataTypes.INTEGER,
     },
+    dataType: {
+      type: DataTypes.STRING,
+    },
+    points: {
+      type: DataTypes.INTEGER,
+      defaultValue: 0,
+    },
     dataName: {
       type: DataTypes.STRING,
       allowNull: false,

@@ -58,7 +58,7 @@ function ProfilePage() {
         setBlocksMined(blocksMinedResponse.data);
         setPlaytimes(playtimesResponse.data);
         setTopDiamondMiners(topDiamondMinersResponse.data);
-        setChallenges(challengesResponse.data.filter(challenge => challenge.categoryId === 7)); // Filter challenges with categoryId === 2
+        setChallenges(challengesResponse.data.filter(challenge => challenge.categoryId === 12)); // Filter challenges with categoryId === 2
 
         localStorage.setItem('entityMap', JSON.stringify(entityMapResponse.data));
         localStorage.setItem('blockMap', JSON.stringify(blockMapResponse.data));
