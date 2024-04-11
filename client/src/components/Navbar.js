@@ -3,11 +3,22 @@ import { Link, useLocation } from 'react-router-dom';
 import styled from 'styled-components';
 import { AuthContext } from '../contexts/AuthContext';
 import { useNavigate } from 'react-router-dom';
+import logo from '../logo.gif';
 
 const Nav = styled.nav`
   display: flex;
-  justify-content: center;
+  align-items: center;
   margin-bottom: 20px;
+`;
+
+const LogoLink = styled(Link)`
+  margin-right: auto;
+`;
+
+const Logo = styled.img`
+  width: auto;
+  height: 50px;
+  cursor: pointer;
 `;
 
 const NavLink = styled(Link)`
@@ -53,6 +64,9 @@ function Navbar() {
 
   return (
     <Nav>
+      <LogoLink to="/">
+        <Logo src={logo} alt="Logo" />
+      </LogoLink>
       <NavLink to="/" active={location.pathname === '/'}>Home</NavLink>
       <NavLink to="/events" active={location.pathname === '/events'}>Events</NavLink>
       <NavLink to="/rules" active={location.pathname === '/rules'}>Rules</NavLink>
