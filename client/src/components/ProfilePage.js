@@ -21,6 +21,29 @@ const LogoImage = styled.img`
   position: relative;
 `;
 
+const PlayerInfoContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 30%;
+  padding: 1rem;
+`;
+
+const WorldStatsContainer = styled.div`
+  width: 70%;
+  padding: 1rem;
+`;
+
+const ChallengesContainer = styled.div`
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+`;
+
+const ChallengeSubDiv = styled.div`
+  width: 48%;
+`;
+
 function ProfilePage() {
   const { username, teamName } = useContext(AuthContext);
   const [blocksMined, setBlocksMined] = useState([]);
@@ -58,7 +81,7 @@ function ProfilePage() {
         setBlocksMined(blocksMinedResponse.data);
         setPlaytimes(playtimesResponse.data);
         setTopDiamondMiners(topDiamondMinersResponse.data);
-        setChallenges(challengesResponse.data.filter(challenge => challenge.categoryId === 12)); // Filter challenges with categoryId === 2
+        setChallenges(challengesResponse.data); // Filter challenges with categoryId === 2
 
         localStorage.setItem('entityMap', JSON.stringify(entityMapResponse.data));
         localStorage.setItem('blockMap', JSON.stringify(blockMapResponse.data));
@@ -70,40 +93,62 @@ function ProfilePage() {
     fetchData();
   }, [username]);
 
-  return (
-    <div style={{ display: 'flex', flexDirection: 'column', height: '100vh' }}>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '1rem' }}>
-        <div style={{ display: 'flex', alignItems: 'center' }}>
-          <LogoImage src={AccountLogo} alt="Account Logo" className="border doodle-border-1" />
-          <h2>Welcome, {username}!</h2>
-          <p>Team: {teamName}</p>
-          <div>
-            <h2>Challenges</h2>
-            {challenges.map((challenge) => (
-              <ChallengeProgress key={challenge.id} challenge={challenge} />
-            ))}
-            <OnlinePlayerCount />
-          </div>
+  const currentDate = new Date();
+  const nowChallenges = challenges.filter(
+      (challenge) =>
+        new Date(challenge.startDate) <= currentDate && new Date(challenge.endDate) >= currentDate
+    );
+  const nextChallenges = challenges.filter((challenge) => new Date(challenge.startDate) > currentDate);
+
+return (
+  <div style={{ display: 'flex', flexDirection: 'row', height: '100vh' }}>
+    <WorldStatsContainer>
+      <div style={{ display: 'flex', flexDirection: 'column' }}>
+        <div className="border doodle-border-2">
+          <h2>Challenges</h2>
+          <ChallengesContainer>
+            <ChallengeSubDiv>
+              <h3>Now</h3>
+              {nowChallenges.map((challenge) => (
+                <div key={challenge.id} className="border doodle-border">
+                  <ChallengeProgress challenge={challenge} />
+                </div>
+              ))}
+            </ChallengeSubDiv>
+            <ChallengeSubDiv>
+              <h3>Next</h3>
+              {nextChallenges.map((challenge) => (
+                <div key={challenge.id} className="border doodle-border">
+                  <ChallengeProgress challenge={challenge} />
+                </div>
+              ))}
+            </ChallengeSubDiv>
+          </ChallengesContainer>
         </div>
-      </div>
-      <div style={{ display: 'flex', flexDirection: 'row', flexWrap: 'wrap' }}>
-        <div className="border doodle-border">
-          <BlocksMinedChart blocksMined={blocksMined} blockMap={blockMap} />
-        </div>
-        <div className="border doodle-border">
-          <PlaytimeChart playtimes={playtimes} />
-        </div>
-        <div className="border doodle-border">
-          <EntitiesKilledChart entitiesKilled={entitiesKilled} entityMap={entityMap} />
-        </div>
+        <OnlinePlayerCount />
         {topDiamondMiners.length > 0 && (
           <div className="border doodle-border">
             <TopDiamondMinersChart topDiamondMiners={topDiamondMiners} />
           </div>
         )}
       </div>
-    </div>
-  );
+    </WorldStatsContainer>
+    <PlayerInfoContainer className="border doodle-border-2">
+      <LogoImage src={AccountLogo} alt="Account Logo" className="border doodle-border-1" />
+      <h2>{username}</h2>
+      <p>Team: {teamName}</p>
+      <div className="border doodle-border">
+        <BlocksMinedChart blocksMined={blocksMined} blockMap={blockMap} />
+      </div>
+      <div className="border doodle-border">
+        <PlaytimeChart playtimes={playtimes} />
+      </div>
+      <div className="border doodle-border">
+        <EntitiesKilledChart entitiesKilled={entitiesKilled} entityMap={entityMap} />
+      </div>
+    </PlayerInfoContainer>
+  </div>
+);
 }
 
 export default ProfilePage;
