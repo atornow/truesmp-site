@@ -78,7 +78,6 @@ docker-compose.yml
 .env.development.local
 .env.test.local
 .env.production.local
-.vscode/
 
 # Optional pgAdmin backup files
 *.backup
