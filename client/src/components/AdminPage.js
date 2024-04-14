@@ -10,6 +10,23 @@ function AdminPage() {
   const [categoryId, setCategoryId] = useState('');
   const [dataType, setDataType] = useState('entity');
   const [points, setPoints] = useState(0);
+  const [deleteType, setDeleteType] = useState('');
+  const [deleteFilters, setDeleteFilters] = useState({});
+
+  const handleDeleteSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      await axios.delete(`http://localhost:3001/api/admin/${deleteType}`, {
+        data: deleteFilters,
+      });
+      // Show success message
+      alert('Objects deleted successfully!');
+    } catch (error) {
+      console.error('Error deleting objects:', error);
+      // Show error message
+      alert('Error deleting objects. Please try again.');
+    }
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -130,7 +147,58 @@ function AdminPage() {
           </div>
         <button type="submit">Create Challenges</button>
       </form>
-    </div>
+      <h3>Delete Panel</h3>
+            <form onSubmit={handleDeleteSubmit}>
+              <div>
+                <label htmlFor="deleteType">Delete Type:</label>
+                <select
+                  id="deleteType"
+                  value={deleteType}
+                  onChange={(e) => setDeleteType(e.target.value)}
+                  required
+                >
+                  <option value="">Select Type</option>
+                  <option value="challenges">Challenges</option>
+                  <option value="galleryPosts">Gallery Posts</option>
+                  <option value="users">Users</option>
+                </select>
+              </div>
+              {deleteType === 'challenges' && (
+                <div>
+                  <label htmlFor="challengeId">Challenge ID:</label>
+                  <input
+                    type="text"
+                    id="challengeId"
+                    value={deleteFilters.id}
+                    onChange={(e) => setDeleteFilters({ ...deleteFilters, id: e.target.value })}
+                  />
+                </div>
+              )}
+              {deleteType === 'galleryPosts' && (
+                <div>
+                  <label htmlFor="galleryPostId">Gallery Post ID:</label>
+                  <input
+                    type="text"
+                    id="galleryPostId"
+                    value={deleteFilters.id}
+                    onChange={(e) => setDeleteFilters({ ...deleteFilters, id: e.target.value })}
+                  />
+                </div>
+              )}
+              {deleteType === 'users' && (
+                <div>
+                  <label htmlFor="username">Username:</label>
+                  <input
+                    type="text"
+                    id="username"
+                    value={deleteFilters.username}
+                    onChange={(e) => setDeleteFilters({ ...deleteFilters, username: e.target.value })}
+                  />
+                </div>
+              )}
+              <button type="submit">Delete</button>
+            </form>
+          </div>
   );
 }
 

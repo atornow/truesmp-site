@@ -1,6 +1,9 @@
 # Use the official Node.js 16 image as a parent image
 FROM node:16-alpine
 
+# Install build dependencies for bcrypt
+RUN apk add --no-cache make gcc g++ python3
+
 # Set the working directory in the container
 WORKDIR /usr/src/app
 
@@ -8,7 +11,7 @@ WORKDIR /usr/src/app
 COPY package*.json ./
 
 # Install dependencies
-RUN npm install --production
+RUN npm ci
 
 # Copy the rest of your application's code
 COPY . .

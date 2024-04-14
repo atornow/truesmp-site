@@ -22,5 +22,6 @@ db.sequelize = sequelize;
 // Import models
 db.users = require('./user')(sequelize, Sequelize);
 db.challenges = require('./challenge')(sequelize, Sequelize);
+db.galleryPosts = require('./galleryPost')(sequelize, Sequelize);
 
 module.exports = db;

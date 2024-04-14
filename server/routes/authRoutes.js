@@ -114,7 +114,8 @@ router.post('/login', async (req, res) => {
       updateUserStats(user);
       const teamName = await fetchTeamName(user.uuid);
       console.log('Login - teamName:', teamName);
-      res.json({ message: "Login successful", token, teamName });
+      const uuid = user.uuid;
+      res.json({ message: "Login successful", token, teamName, uuid });
     } else {
       res.status(401).send('Invalid username or password');
     }

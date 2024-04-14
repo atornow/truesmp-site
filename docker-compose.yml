@@ -5,32 +5,29 @@ services:
       context: ./server
       dockerfile: Dockerfile
     volumes:
-      - ./server:/usr/src/app
-      - /usr/src/app/node_modules
+      - ./server:/app
+      - ./uploads:/app/uploads
     ports:
       - "3001:3001"
     env_file:
       - main.env
-    environment:
-      - NODE_ENV=development
     networks:
       - app-network
     depends_on:
       - db
 
   frontend:
-    image: node:latest  # Use the official node image
-    working_dir: /app  # Set working directory
-    command: sh -c "npm install && npm start"  # Install dependencies and start CRA server
+    image: node:latest
+    working_dir: /app
+    command: sh -c "npm install && npm start"
     volumes:
-      - ./client:/app  # Mount the local source code to the container
-      - /app/node_modules
+      - ./client:/app
     ports:
       - "3000:3000"
     env_file:
       - main.env
-    stdin_open: true  # Keep the container running
-    tty: true  # Allocate a pseudo-TTY
+    stdin_open: true
+    tty: true
     networks:
       - app-network
 
@@ -41,13 +38,12 @@ services:
     ports:
       - "5432:5432"
     volumes:
-      - db29-data:/var/lib/postgresql/data
+      - db1-data:/var/lib/postgresql/data
     networks:
       - app-network
 
 volumes:
-  db29-data:
-  backend_data:
+  db1-data:
 
 networks:
   app-network:

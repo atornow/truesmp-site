@@ -20,9 +20,9 @@ function LoginForm() {
     event.preventDefault();
     try {
       const response = await axios.post('http://localhost:3001/api/auth/login', { username, password });
-      const { token, teamName } = response.data;
+      const { token, teamName, uuid } = response.data;
 
-      login(token, username, teamName); // Pass the teamName to the login function
+      login(token, username, teamName, uuid); // Pass the teamName to the login function
 
       setUsername('');
       setPassword('');

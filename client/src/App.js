@@ -9,6 +9,7 @@ import ProtectedRoute from './components/ProtectedRoute';
 import Navbar from './components/Navbar';
 import EventsPage from './components/EventsPage';
 import RulesPage from './components/RulesPage';
+import GalleryPage from './components/GalleryPage';
 import VerificationPage from './components/VerificationPage';
 import { AuthContext } from './contexts/AuthContext';
 import './css/doodle-css/doodle.css';
@@ -71,6 +72,14 @@ function App() {
             element={
               <ProtectedRoute>
                 {username === 'RamenLover' ? <AdminPage /> : <Navigate to="/profile" />}
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/gallery"
+            element={
+              <ProtectedRoute>
+                <GalleryPage />
               </ProtectedRoute>
             }
           />

@@ -69,6 +69,7 @@ function Navbar() {
       </LogoLink>
       <NavLink to="/" active={location.pathname === '/'}>Home</NavLink>
       <NavLink to="/events" active={location.pathname === '/events'}>Events</NavLink>
+      <NavLink to="/gallery" active={location.pathname === '/gallery'}>Gallery</NavLink>
       <NavLink to="/rules" active={location.pathname === '/rules'}>Rules</NavLink>
       {isAuthenticated && <LogoutButton onClick={handleLogout}>Log Out</LogoutButton>}
       {isAuthenticated && username === 'RamenLover' && (
