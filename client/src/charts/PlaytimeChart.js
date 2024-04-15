@@ -2,6 +2,8 @@ import React from 'react';
 import { Line } from 'react-chartjs-2';
 
 function PlaytimeChart({ playtimes }) {
+  const cachedPlaytimes = JSON.parse(localStorage.getItem('playtimes')) || playtimes;
+
   const generateDayLabels = (length) => {
     const currentDate = new Date();
     const labels = [];
@@ -19,11 +21,11 @@ function PlaytimeChart({ playtimes }) {
   };
 
   const chartDataPlay = {
-    labels: generateDayLabels(playtimes?.length || 0),
+    labels: generateDayLabels(cachedPlaytimes?.length || 0),
     datasets: [
       {
         label: 'Playtimes',
-        data: (playtimes || []).map((playtime) => playtime / 3600), // Convert seconds to hours
+        data: (cachedPlaytimes || []).map((playtime) => playtime / 3600), // Convert seconds to hours
         borderColor: '#202020',
         backgroundColor: '#FFFFFF',
       },

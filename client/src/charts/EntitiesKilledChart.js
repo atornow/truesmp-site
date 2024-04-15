@@ -2,17 +2,20 @@ import React from 'react';
 import { Bar } from 'react-chartjs-2';
 
 function EntitiesKilledChart({ entitiesKilled, entityMap }) {
+  const cachedEntitiesKilled = JSON.parse(localStorage.getItem('entitiesKilled')) || entitiesKilled;
+  const cachedEntityMap = JSON.parse(localStorage.getItem('entityMap')) || entityMap;
+
   // Create an object to store the entity counts
   const entityCounts = {};
 
   // Iterate over the entitiesKilled array and count the entities
-  if (entitiesKilled) {
-  entitiesKilled.forEach((count, index) => {
-    if (count > 0 && entityMap && entityMap[index - 1]) {
-      const entityName = entityMap[index - 1]; // Adjust the index by subtracting 1
-      entityCounts[entityName] = (entityCounts[entityName] || 0) + count;
-    }
-  });
+  if (cachedEntitiesKilled) {
+    cachedEntitiesKilled.forEach((count, index) => {
+      if (count > 0 && cachedEntityMap && cachedEntityMap[index - 1]) {
+        const entityName = cachedEntityMap[index - 1]; // Adjust the index by subtracting 1
+        entityCounts[entityName] = (entityCounts[entityName] || 0) + count;
+      }
+    });
   }
 
   // Convert the entityCounts object to an array of { entity, count } objects
@@ -43,41 +46,41 @@ function EntitiesKilledChart({ entitiesKilled, entityMap }) {
   };
 
   const chartOptions = {
-      maintainAspectRatio: false,
-      plugins: {
-        tooltip: {
-          titleFont: {
-            family: 'Xkcd',
-          },
-          bodyFont: {
-            family: 'Xkcd',
-          },
+    maintainAspectRatio: false,
+    plugins: {
+      tooltip: {
+        titleFont: {
+          family: 'Xkcd',
         },
-        legend: {
-          labels: {
-            font: {
-              family: 'Xkcd',
-            },
+        bodyFont: {
+          family: 'Xkcd',
+        },
+      },
+      legend: {
+        labels: {
+          font: {
+            family: 'Xkcd',
           },
         },
       },
-      scales: {
-        x: {
-          ticks: {
-            font: {
-              family: 'Xkcd',
-            },
-          },
-        },
-        y: {
-          ticks: {
-            font: {
-              family: 'Xkcd',
-            },
+    },
+    scales: {
+      x: {
+        ticks: {
+          font: {
+            family: 'Xkcd',
           },
         },
       },
-    };
+      y: {
+        ticks: {
+          font: {
+            family: 'Xkcd',
+          },
+        },
+      },
+    },
+  };
 
   return (
     <div style={{ flex: 2, padding: '1rem', height: '400px' }}>

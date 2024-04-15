@@ -2,15 +2,17 @@ import React from 'react';
 import { Bar } from 'react-chartjs-2';
 
 function BlocksMinedChart({ blocksMined, blockMap }) {
+  const cachedBlocksMined = JSON.parse(localStorage.getItem('blocksMined')) || blocksMined;
+  const cachedBlockMap = JSON.parse(localStorage.getItem('blockMap')) || blockMap;
+
   // Create an object to store the block counts
   const blockCounts = {};
-  console.log('Blocks Mined:', blocksMined);
-  console.log('Block Map:', blockMap);
+
   // Iterate over the blocksMined array and count the blocks
-  if (blocksMined) {
-    blocksMined.forEach((count, index) => {
-      if (count > 0 && blockMap && blockMap[index - 1]) {
-        const blockName = blockMap[index - 1]; // Adjust the index by subtracting 1
+  if (cachedBlocksMined) {
+    cachedBlocksMined.forEach((count, index) => {
+      if (count > 0 && cachedBlockMap && cachedBlockMap[index - 1]) {
+        const blockName = cachedBlockMap[index - 1]; // Adjust the index by subtracting 1
         blockCounts[blockName] = (blockCounts[blockName] || 0) + count;
       }
     });
@@ -44,41 +46,41 @@ function BlocksMinedChart({ blocksMined, blockMap }) {
   };
 
   const chartOptions = {
-      maintainAspectRatio: false,
-      plugins: {
-        tooltip: {
-          titleFont: {
-            family: 'Xkcd',
-          },
-          bodyFont: {
-            family: 'Xkcd',
-          },
+    maintainAspectRatio: false,
+    plugins: {
+      tooltip: {
+        titleFont: {
+          family: 'Xkcd',
         },
-        legend: {
-          labels: {
-            font: {
-              family: 'Xkcd',
-            },
+        bodyFont: {
+          family: 'Xkcd',
+        },
+      },
+      legend: {
+        labels: {
+          font: {
+            family: 'Xkcd',
           },
         },
       },
-      scales: {
-        x: {
-          ticks: {
-            font: {
-              family: 'Xkcd',
-            },
-          },
-        },
-        y: {
-          ticks: {
-            font: {
-              family: 'Xkcd',
-            },
+    },
+    scales: {
+      x: {
+        ticks: {
+          font: {
+            family: 'Xkcd',
           },
         },
       },
-    };
+      y: {
+        ticks: {
+          font: {
+            family: 'Xkcd',
+          },
+        },
+      },
+    },
+  };
 
   return (
     <div style={{ flex: 2, padding: '1rem', height: '400px' }}>

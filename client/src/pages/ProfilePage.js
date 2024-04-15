@@ -83,14 +83,24 @@ function ProfilePage() {
         setTopDiamondMiners(topDiamondMinersResponse.data);
         setChallenges(challengesResponse.data); // Filter challenges with categoryId === 2
 
+        localStorage.setItem('entitiesKilled', JSON.stringify(entitiesKilledResponse.data));
         localStorage.setItem('entityMap', JSON.stringify(entityMapResponse.data));
         localStorage.setItem('blockMap', JSON.stringify(blockMapResponse.data));
+        localStorage.setItem('blocksMined', JSON.stringify(blocksMinedResponse.data));
+        localStorage.setItem('playtimes', JSON.stringify(playtimesResponse.data));
+        localStorage.setItem('topDiamondMiners', JSON.stringify(topDiamondMinersResponse.data));
+        localStorage.setItem('challenges', JSON.stringify(challengesResponse.data));
       } catch (error) {
         console.error('Error fetching data:', error);
       }
     };
 
     fetchData();
+    const interval = setInterval(fetchData, 60000); // Poll every 60 seconds
+
+    return () => {
+      clearInterval(interval);
+    };
   }, [username]);
 
   const currentDate = new Date();

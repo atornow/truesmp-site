@@ -2,8 +2,10 @@ import React from 'react';
 import { Bar } from 'react-chartjs-2';
 
 function TopDiamondMinersChart({ topDiamondMiners }) {
-  const labels = topDiamondMiners.map((miner) => miner.username);
-  const data = topDiamondMiners.map((miner) => miner.diamondsMined);
+  const cachedTopDiamondMiners = JSON.parse(localStorage.getItem('topDiamondMiners')) || topDiamondMiners;
+
+  const labels = cachedTopDiamondMiners.map((miner) => miner.username);
+  const data = cachedTopDiamondMiners.map((miner) => miner.diamondsMined);
 
   const chartData = {
     labels: labels,
