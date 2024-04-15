@@ -15,6 +15,12 @@ async function updateChallengeProgress(challengeId) {
       : user.blocksMined[dataIndex + 1] || 0;
     const progressDifference = currentProgress - challenge.initialProgress;
 
+    if (progressDifference >= challenge.amountGoal) {
+      // Award points to the user
+      await user.increment('points', { by: challenge.points });
+      await challenge.update({ points: 0 });
+    }
+
     await challenge.update({ currentProgress: progressDifference });
   } catch (error) {
     console.error('Error updating challenge progress:', error);
