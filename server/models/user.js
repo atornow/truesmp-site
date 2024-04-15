@@ -41,8 +41,15 @@ module.exports = (sequelize, DataTypes) => {
     },
     entitiesKilled: {
       type: DataTypes.ARRAY(DataTypes.INTEGER),
-    }
-    // Add other fields as needed
+    },
+    points: {
+      type: DataTypes.INTEGER,
+      defaultValue: 0,
+    },
+    groups: {
+      type: DataTypes.ARRAY(DataTypes.STRING),
+      defaultValue: ['member'],
+    },
   });
 
   return User;

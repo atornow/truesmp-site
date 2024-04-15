@@ -1,9 +1,19 @@
-// server/routes/adminRoutes.js
-
 const express = require('express');
 const router = express.Router();
 const { challenges, galleryPosts, users } = require('../models');
 const { Op } = require('sequelize');
+
+router.post('/challenge-road', async (req, res) => {
+  try {
+    const { length, regularRewards, donatorRewards } = req.body;
+    const challengeRoad = await ChallengeRoad.create({ length, regularRewards, donatorRewards });
+    res.status(201).json(challengeRoad);
+  } catch (error) {
+    console.error('Error creating challenge road:', error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+});
+
 
 router.delete('/challenges', async (req, res) => {
   try {
@@ -20,6 +30,7 @@ router.delete('/challenges', async (req, res) => {
   }
 });
 
+
 router.delete('/galleryPosts', async (req, res) => {
   try {
     const { id, username, caption } = req.body;
@@ -34,6 +45,7 @@ router.delete('/galleryPosts', async (req, res) => {
     res.status(500).json({ message: 'Internal server error' });
   }
 });
+
 
 router.delete('/users', async (req, res) => {
   try {
