@@ -52,7 +52,7 @@ function ProfilePage() {
   const [blockMap, setBlockMap] = useState([]);
   const [entitiesKilled, setEntitiesKilled] = useState([]);
   const [topDiamondMiners, setTopDiamondMiners] = useState([]);
-  const [challenges, setChallenges] = useState([]);
+  const [challenges, setChallenges] = useState(JSON.parse(localStorage.getItem('challenges')) || []);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -81,7 +81,7 @@ function ProfilePage() {
         setBlocksMined(blocksMinedResponse.data);
         setPlaytimes(playtimesResponse.data);
         setTopDiamondMiners(topDiamondMinersResponse.data);
-        setChallenges(challengesResponse.data); // Filter challenges with categoryId === 2
+        setChallenges(challengesResponse.data);
 
         localStorage.setItem('entitiesKilled', JSON.stringify(entitiesKilledResponse.data));
         localStorage.setItem('entityMap', JSON.stringify(entityMapResponse.data));
