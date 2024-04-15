@@ -1,16 +1,16 @@
 import React, { useContext } from 'react';
 import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
 import styled, { createGlobalStyle } from 'styled-components';
-import LoginForm from './components/elements/LoginForm';
-import RegisterForm from './components/elements/RegisterForm';
-import ProfilePage from './components/pages/ProfilePage';
-import AdminPage from './components/pages/AdminPage';
-import ProtectedRoute from './components/elements/ProtectedRoute';
-import Navbar from './components/elements/Navbar';
-import EventsPage from './components/pages/EventsPage';
-import RulesPage from './components/pages/RulesPage';
-import GalleryPage from './components/pages/GalleryPage';
-import VerificationPage from './components/pages/VerificationPage';
+import LoginForm from './elements/LoginForm';
+import RegisterForm from './elements/RegisterForm';
+import ProfilePage from './pages/ProfilePage';
+import AdminPage from './pages/AdminPage';
+import ProtectedRoute from './elements/ProtectedRoute';
+import Navbar from './elements/Navbar';
+import EventsPage from './pages/EventsPage';
+import RulesPage from './pages/RulesPage';
+import GalleryPage from './pages/GalleryPage';
+import VerificationPage from './pages/VerificationPage';
 import { AuthContext } from './contexts/AuthContext';
 import './css/doodle-css/doodle.css';
 

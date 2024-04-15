@@ -6,9 +6,9 @@ import EntitiesKilledChart from '../charts/EntitiesKilledChart';
 import PlaytimeChart from '../charts/PlaytimeChart';
 import BlocksMinedChart from '../charts/BlocksMinedChart';
 import TopDiamondMinersChart from '../charts/TopDiamondMinersChart';
-import AccountLogo from '../../assets/AccountLogo.png';
+import AccountLogo from '../assets/AccountLogo.png';
 import styled from 'styled-components';
-import { AuthContext } from '../../contexts/AuthContext';
+import { AuthContext } from '../contexts/AuthContext';
 import ChallengeProgress from '../elements/ChallengeProgress';
 import OnlinePlayerCount from '../elements/OnlinePlayerCount';
 
