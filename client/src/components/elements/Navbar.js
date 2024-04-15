@@ -1,9 +1,9 @@
 import React, { useContext } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import styled from 'styled-components';
-import { AuthContext } from '../contexts/AuthContext';
+import { AuthContext } from '../../contexts/AuthContext';
 import { useNavigate } from 'react-router-dom';
-import logo from '../logo.gif';
+import logo from '../../assets/logo.gif';
 
 const Nav = styled.nav`
   display: flex;

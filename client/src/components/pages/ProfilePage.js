@@ -2,15 +2,15 @@ import React, { useState, useEffect, useContext } from 'react';
 import axios from 'axios';
 import { CategoryScale } from 'chart.js';
 import { Chart as ChartJS } from 'chart.js/auto';
-import EntitiesKilledChart from './charts/EntitiesKilledChart';
-import PlaytimeChart from './charts/PlaytimeChart';
-import BlocksMinedChart from './charts/BlocksMinedChart';
-import TopDiamondMinersChart from './charts/TopDiamondMinersChart';
-import AccountLogo from '../assets/AccountLogo.png';
+import EntitiesKilledChart from '../charts/EntitiesKilledChart';
+import PlaytimeChart from '../charts/PlaytimeChart';
+import BlocksMinedChart from '../charts/BlocksMinedChart';
+import TopDiamondMinersChart from '../charts/TopDiamondMinersChart';
+import AccountLogo from '../../assets/AccountLogo.png';
 import styled from 'styled-components';
-import { AuthContext } from '../contexts/AuthContext';
-import ChallengeProgress from './ChallengeProgress';
-import OnlinePlayerCount from './OnlinePlayerCount';
+import { AuthContext } from '../../contexts/AuthContext';
+import ChallengeProgress from '../elements/ChallengeProgress';
+import OnlinePlayerCount from '../elements/OnlinePlayerCount';
 
 ChartJS.register(CategoryScale);
 
