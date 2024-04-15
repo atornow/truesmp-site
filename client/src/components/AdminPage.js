@@ -164,42 +164,102 @@ function AdminPage() {
                 </select>
               </div>
               {deleteType === 'challenges' && (
-                <div>
-                  <label htmlFor="challengeId">Challenge ID:</label>
-                  <input
-                    type="text"
-                    id="challengeId"
-                    value={deleteFilters.id}
-                    onChange={(e) => setDeleteFilters({ ...deleteFilters, id: e.target.value })}
-                  />
-                </div>
+                <>
+                  <div>
+                    <label htmlFor="challengeId">Challenge ID:</label>
+                    <input
+                      type="text"
+                      id="challengeId"
+                      value={deleteFilters.id || ''}
+                      onChange={(e) => setDeleteFilters({ ...deleteFilters, id: e.target.value })}
+                    />
+                  </div>
+                  <div>
+                    <label htmlFor="challengeDescription">Description:</label>
+                    <input
+                      type="text"
+                      id="challengeDescription"
+                      value={deleteFilters.description || ''}
+                      onChange={(e) => setDeleteFilters({ ...deleteFilters, description: e.target.value })}
+                    />
+                  </div>
+                  <div>
+                    <label htmlFor="challengeTargetUsername">Target Username:</label>
+                    <input
+                      type="text"
+                      id="challengeTargetUsername"
+                      value={deleteFilters.targetUsername || ''}
+                      onChange={(e) => setDeleteFilters({ ...deleteFilters, targetUsername: e.target.value })}
+                    />
+                  </div>
+                </>
               )}
               {deleteType === 'galleryPosts' && (
-                <div>
-                  <label htmlFor="galleryPostId">Gallery Post ID:</label>
-                  <input
-                    type="text"
-                    id="galleryPostId"
-                    value={deleteFilters.id}
-                    onChange={(e) => setDeleteFilters({ ...deleteFilters, id: e.target.value })}
-                  />
-                </div>
+                <>
+                  <div>
+                    <label htmlFor="galleryPostId">Gallery Post ID:</label>
+                    <input
+                      type="text"
+                      id="galleryPostId"
+                      value={deleteFilters.id || ''}
+                      onChange={(e) => setDeleteFilters({ ...deleteFilters, id: e.target.value })}
+                    />
+                  </div>
+                  <div>
+                    <label htmlFor="galleryPostUsername">Username:</label>
+                    <input
+                      type="text"
+                      id="galleryPostUsername"
+                      value={deleteFilters.username || ''}
+                      onChange={(e) => setDeleteFilters({ ...deleteFilters, username: e.target.value })}
+                    />
+                  </div>
+                  <div>
+                    <label htmlFor="galleryPostCaption">Caption:</label>
+                    <input
+                      type="text"
+                      id="galleryPostCaption"
+                      value={deleteFilters.caption || ''}
+                      onChange={(e) => setDeleteFilters({ ...deleteFilters, caption: e.target.value })}
+                    />
+                  </div>
+                </>
               )}
               {deleteType === 'users' && (
-                <div>
-                  <label htmlFor="username">Username:</label>
-                  <input
-                    type="text"
-                    id="username"
-                    value={deleteFilters.username}
-                    onChange={(e) => setDeleteFilters({ ...deleteFilters, username: e.target.value })}
-                  />
-                </div>
+                <>
+                  <div>
+                    <label htmlFor="username">Username:</label>
+                    <input
+                      type="text"
+                      id="username"
+                      value={deleteFilters.username || ''}
+                      onChange={(e) => setDeleteFilters({ ...deleteFilters, username: e.target.value })}
+                    />
+                  </div>
+                  <div>
+                    <label htmlFor="uuid">UUID:</label>
+                    <input
+                      type="text"
+                      id="uuid"
+                      value={deleteFilters.uuid || ''}
+                      onChange={(e) => setDeleteFilters({ ...deleteFilters, uuid: e.target.value })}
+                    />
+                  </div>
+                  <div>
+                    <label htmlFor="teamId">Team ID:</label>
+                    <input
+                      type="text"
+                      id="teamId"
+                      value={deleteFilters.teamId || ''}
+                      onChange={(e) => setDeleteFilters({ ...deleteFilters, teamId: e.target.value })}
+                    />
+                  </div>
+                </>
               )}
               <button type="submit">Delete</button>
             </form>
           </div>
-  );
-}
+        );
+      }
 
 export default AdminPage;

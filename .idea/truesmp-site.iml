@@ -2,7 +2,47 @@
 <module type="JAVA_MODULE" version="4">
   <component name="NewModuleRootManager" inherit-compiler-output="true">
     <exclude-output />
-    <content url="file://$MODULE_DIR$" />
+    <content url="file://$MODULE_DIR$">
+      <excludeFolder url="file://$MODULE_DIR$/.idea/codeStyles" />
+      <excludeFolder url="file://$MODULE_DIR$/client/build" />
+      <excludeFolder url="file://$MODULE_DIR$/client/node_modules" />
+      <excludeFolder url="file://$MODULE_DIR$/server/node_modules/@remix-run/router/dist" />
+      <excludeFolder url="file://$MODULE_DIR$/server/node_modules/agent-base/dist" />
+      <excludeFolder url="file://$MODULE_DIR$/server/node_modules/agent-base/node_modules" />
+      <excludeFolder url="file://$MODULE_DIR$/server/node_modules/are-we-there-yet/node_modules" />
+      <excludeFolder url="file://$MODULE_DIR$/server/node_modules/axios/dist" />
+      <excludeFolder url="file://$MODULE_DIR$/server/node_modules/fs-minipass/node_modules" />
+      <excludeFolder url="file://$MODULE_DIR$/server/node_modules/https-proxy-agent/dist" />
+      <excludeFolder url="file://$MODULE_DIR$/server/node_modules/https-proxy-agent/node_modules" />
+      <excludeFolder url="file://$MODULE_DIR$/server/node_modules/inflection/.vscode" />
+      <excludeFolder url="file://$MODULE_DIR$/server/node_modules/jsonwebtoken/node_modules" />
+      <excludeFolder url="file://$MODULE_DIR$/server/node_modules/lru-cache/dist" />
+      <excludeFolder url="file://$MODULE_DIR$/server/node_modules/make-dir/node_modules" />
+      <excludeFolder url="file://$MODULE_DIR$/server/node_modules/minizlib/node_modules" />
+      <excludeFolder url="file://$MODULE_DIR$/server/node_modules/moment/dist" />
+      <excludeFolder url="file://$MODULE_DIR$/server/node_modules/mysql2/node_modules" />
+      <excludeFolder url="file://$MODULE_DIR$/server/node_modules/named-placeholders/node_modules" />
+      <excludeFolder url="file://$MODULE_DIR$/server/node_modules/node-cron/node_modules" />
+      <excludeFolder url="file://$MODULE_DIR$/server/node_modules/nodemon/node_modules" />
+      <excludeFolder url="file://$MODULE_DIR$/server/node_modules/pg-cloudflare/dist" />
+      <excludeFolder url="file://$MODULE_DIR$/server/node_modules/pg-protocol/dist" />
+      <excludeFolder url="file://$MODULE_DIR$/server/node_modules/qs/dist" />
+      <excludeFolder url="file://$MODULE_DIR$/server/node_modules/react-router-dom/dist" />
+      <excludeFolder url="file://$MODULE_DIR$/server/node_modules/react-router/dist" />
+      <excludeFolder url="file://$MODULE_DIR$/server/node_modules/readable-stream/node_modules" />
+      <excludeFolder url="file://$MODULE_DIR$/server/node_modules/retry-as-promised/dist" />
+      <excludeFolder url="file://$MODULE_DIR$/server/node_modules/semver/node_modules" />
+      <excludeFolder url="file://$MODULE_DIR$/server/node_modules/send/node_modules" />
+      <excludeFolder url="file://$MODULE_DIR$/server/node_modules/sequelize/node_modules" />
+      <excludeFolder url="file://$MODULE_DIR$/server/node_modules/simple-update-notifier/build" />
+      <excludeFolder url="file://$MODULE_DIR$/server/node_modules/simple-update-notifier/node_modules" />
+      <excludeFolder url="file://$MODULE_DIR$/server/node_modules/string_decoder/node_modules" />
+      <excludeFolder url="file://$MODULE_DIR$/server/node_modules/tar/node_modules" />
+      <excludeFolder url="file://$MODULE_DIR$/server/node_modules/toposort-class/build" />
+      <excludeFolder url="file://$MODULE_DIR$/server/node_modules/touch/node_modules" />
+      <excludeFolder url="file://$MODULE_DIR$/server/node_modules/uuid/dist" />
+      <excludeFolder url="file://$MODULE_DIR$/server/node_modules/wkx/dist" />
+    </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
   </component>

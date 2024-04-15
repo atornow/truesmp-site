@@ -21,7 +21,7 @@ app.use('/api/stats', statsRoutes);
 app.use('/api/challenges', challengeRoutes);
 app.use('/api/gallery', galleryRoutes);
 app.use('/api/admin', adminRoutes);
-app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+app.use('/uploads', express.static(path.join(__dirname,  'uploads')));
 
 sequelize.sync().then(() => {
   app.listen(PORT, () => {

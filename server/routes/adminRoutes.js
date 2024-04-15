@@ -1,11 +1,18 @@
+// server/routes/adminRoutes.js
+
 const express = require('express');
 const router = express.Router();
 const { challenges, galleryPosts, users } = require('../models');
+const { Op } = require('sequelize');
 
 router.delete('/challenges', async (req, res) => {
   try {
-    const { id } = req.body;
-    await challenges.destroy({ where: { categoryId: id } });
+    const { id, description, targetUsername } = req.body;
+    const where = {};
+    if (id) where.categoryId = id;
+    if (description) where.description = { [Op.like]: `%${description}%` };
+    if (targetUsername) where.targetUsername = { [Op.like]: `%${targetUsername}%` };
+    await challenges.destroy({ where });
     res.json({ message: 'Challenges deleted successfully' });
   } catch (error) {
     console.error('Error deleting challenges:', error);
@@ -15,8 +22,12 @@ router.delete('/challenges', async (req, res) => {
 
 router.delete('/galleryPosts', async (req, res) => {
   try {
-    const { id } = req.body;
-    await galleryPosts.destroy({ where: { id } });
+    const { id, username, caption } = req.body;
+    const where = {};
+    if (id) where.id = id;
+    if (username) where.username = { [Op.like]: `%${username}%` };
+    if (caption) where.caption = { [Op.like]: `%${caption}%` };
+    await galleryPosts.destroy({ where });
     res.json({ message: 'Gallery posts deleted successfully' });
   } catch (error) {
     console.error('Error deleting gallery posts:', error);
@@ -26,8 +37,12 @@ router.delete('/galleryPosts', async (req, res) => {
 
 router.delete('/users', async (req, res) => {
   try {
-    const { username } = req.body;
-    await users.destroy({ where: { username } });
+    const { username, uuid, teamId } = req.body;
+    const where = {};
+    if (username) where.username = { [Op.like]: `%${username}%` };
+    if (uuid) where.uuid = { [Op.like]: `%${uuid}%` };
+    if (teamId) where.teamId = { [Op.like]: `%${teamId}%` };
+    await users.destroy({ where });
     res.json({ message: 'Users deleted successfully' });
   } catch (error) {
     console.error('Error deleting users:', error);
