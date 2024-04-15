@@ -47,6 +47,7 @@ const ChallengeSubDiv = styled.div`
 function ProfilePage() {
   const { username, teamName } = useContext(AuthContext);
   const [blocksMined, setBlocksMined] = useState([]);
+  const [blocksPlaced, setBlocksPlaced] = useState([]);
   const [playtimes, setPlaytimes] = useState([]);
   const [entityMap, setEntityMap] = useState([]);
   const [blockMap, setBlockMap] = useState([]);
@@ -58,36 +59,33 @@ function ProfilePage() {
     const fetchData = async () => {
       try {
         const [
-          entitiesKilledResponse,
+          userData,
           entityMapResponse,
           blockMapResponse,
-          blocksMinedResponse,
-          playtimesResponse,
           topDiamondMinersResponse,
           challengesResponse,
         ] = await Promise.all([
-          axios.get(`http://localhost:3001/api/stats/${username}/entitiesKilled`),
+          axios.get(`http://localhost:3001/api/stats/${username}`),
           axios.get('http://localhost:3001/api/stats/entity-map'),
           axios.get('http://localhost:3001/api/stats/block-map'),
-          axios.get(`http://localhost:3001/api/stats/${username}/blocksMined`),
-          axios.get(`http://localhost:3001/api/stats/${username}/playtimes`),
           axios.get('http://localhost:3001/api/stats/top-diamond-miners'),
           axios.get(`http://localhost:3001/api/challenges?targetUsername=${username}`),
         ]);
 
-        setEntitiesKilled(entitiesKilledResponse.data);
+        setEntitiesKilled(userData.data.entitiesKilled);
+        setBlocksMined(userData.data.blocksMined);
+        setPlaytimes(userData.data.playtimes);
+        setBlocksPlaced(userData.data.blocksPlaced);
         setEntityMap(entityMapResponse.data);
         setBlockMap(blockMapResponse.data);
-        setBlocksMined(blocksMinedResponse.data);
-        setPlaytimes(playtimesResponse.data);
         setTopDiamondMiners(topDiamondMinersResponse.data);
         setChallenges(challengesResponse.data);
 
-        localStorage.setItem('entitiesKilled', JSON.stringify(entitiesKilledResponse.data));
+        localStorage.setItem('entitiesKilled', JSON.stringify(userData.data.entitiesKilled));
         localStorage.setItem('entityMap', JSON.stringify(entityMapResponse.data));
         localStorage.setItem('blockMap', JSON.stringify(blockMapResponse.data));
-        localStorage.setItem('blocksMined', JSON.stringify(blocksMinedResponse.data));
-        localStorage.setItem('playtimes', JSON.stringify(playtimesResponse.data));
+        localStorage.setItem('blocksMined', JSON.stringify(userData.data.blocksMined));
+        localStorage.setItem('playtimes', JSON.stringify(userData.data.playtimes));
         localStorage.setItem('topDiamondMiners', JSON.stringify(topDiamondMinersResponse.data));
         localStorage.setItem('challenges', JSON.stringify(challengesResponse.data));
       } catch (error) {
