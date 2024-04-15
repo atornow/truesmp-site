@@ -51,7 +51,7 @@ jspm_packages/
 .env.test
 
 # Uploads
-server/routes/uploads/
+server/uploads/
 
 # Compiled binary addons
 build/Release
@@ -90,4 +90,3 @@ server/dist/
 /.gitignore
 !/server/node_modules/
 /server/node_modules/
-/.idea/
