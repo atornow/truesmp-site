@@ -91,3 +91,4 @@ server/dist/
 !/server/node_modules/
 /server/node_modules/
 /client/src/css/doodle-css/
+package-lock.json
