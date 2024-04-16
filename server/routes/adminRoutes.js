@@ -1,12 +1,12 @@
 const express = require('express');
 const router = express.Router();
-const { challenges, galleryPosts, users } = require('../models');
+const { challenges, galleryPosts, users, challengeRoads } = require('../models');
 const { Op } = require('sequelize');
 
 router.post('/challenge-road', async (req, res) => {
   try {
-    const { length, regularRewards, donatorRewards } = req.body;
-    const challengeRoad = await ChallengeRoad.create({ length, regularRewards, donatorRewards });
+    const { category, rewards } = req.body;
+    const challengeRoad = await challengeRoads.create({ rewards, categoryId: category });
     res.status(201).json(challengeRoad);
   } catch (error) {
     console.error('Error creating challenge road:', error);

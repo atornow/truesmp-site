@@ -1,14 +1,6 @@
 module.exports = (sequelize, DataTypes) => {
     const ChallengeRoad = sequelize.define('ChallengeRoad', {
-        length: {
-            type: DataTypes.INTEGER,
-            allowNull: false,
-        },
-        regularRewards: {
-            type: DataTypes.JSON,
-            defaultValue: [],
-        },
-        donatorRewards: {
+        rewards: {
             type: DataTypes.JSON,
             defaultValue: [],
         },

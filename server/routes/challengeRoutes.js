@@ -3,6 +3,7 @@ const router = express.Router();
 const { challenges } = require('../models');
 const { createChallenges } = require('../scripts/createChallenge');
 
+
 router.post('/', async (req, res) => {
   try {
     const { amountGoal, startDate, endDate, description, dataName, targetUsername } = req.body;
@@ -13,6 +14,7 @@ router.post('/', async (req, res) => {
     res.status(500).json({ message: 'Internal server error' });
   }
 });
+
 
 router.get('/', async (req, res) => {
   try {
@@ -26,6 +28,7 @@ router.get('/', async (req, res) => {
     res.status(500).json({ message: 'Internal server error' });
   }
 });
+
 
 router.post('/admin', async (req, res) => {
   try {

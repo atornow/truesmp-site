@@ -11,6 +11,7 @@ import styled from 'styled-components';
 import { AuthContext } from '../contexts/AuthContext';
 import ChallengeProgress from '../elements/ChallengeProgress';
 import OnlinePlayerCount from '../elements/OnlinePlayerCount';
+import ChallengeRoad from '../elements/ChallengeRoad';
 
 ChartJS.register(CategoryScale);
 
@@ -132,6 +133,9 @@ return (
               ))}
             </ChallengeSubDiv>
           </ChallengesContainer>
+          <div className="border doodle-border">
+            <ChallengeRoad username={username} />
+          </div>
         </div>
         <OnlinePlayerCount />
         {topDiamondMiners.length > 0 && (

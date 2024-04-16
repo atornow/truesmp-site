@@ -23,5 +23,6 @@ db.sequelize = sequelize;
 db.users = require('./user')(sequelize, Sequelize);
 db.challenges = require('./challenge')(sequelize, Sequelize);
 db.galleryPosts = require('./galleryPost')(sequelize, Sequelize);
+db.challengeRoads = require('./challengeRoad')(sequelize, Sequelize);
 
 module.exports = db;

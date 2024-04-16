@@ -60,7 +60,7 @@ router.get('/:username', async (req, res) => {
   try {
     const user = await users.findOne({
       where: { username },
-      attributes: ['entitiesKilled', 'blocksMined', 'playtimes', 'blocksPlaced'],
+      attributes: ['entitiesKilled', 'blocksMined', 'playtimes', 'blocksPlaced', 'points', 'groups'],
     });
 
     if (user) {

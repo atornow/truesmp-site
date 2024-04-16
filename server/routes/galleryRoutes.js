@@ -3,7 +3,6 @@ const router = express.Router();
 const multer = require('multer');
 const path = require('path');
 const { galleryPosts } = require('../models');
-
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
     cb(null, 'uploads');
@@ -12,8 +11,8 @@ const storage = multer.diskStorage({
     cb(null, Date.now() + path.extname(file.originalname));
   },
 });
-
 const upload = multer({ storage: storage });
+
 
 router.post('/', upload.single('image'), async (req, res) => {
   try {
@@ -25,6 +24,7 @@ router.post('/', upload.single('image'), async (req, res) => {
     console.error('Error creating gallery post:', error);
     res.status(500).json({ message: 'Internal server error' });  }
 });
+
 
 // Fetch gallery posts
 router.get('/', async (req, res) => {
@@ -46,6 +46,7 @@ router.get('/', async (req, res) => {
   }
 });
 
+
 // Like a gallery post
 router.post('/:postId/like', async (req, res) => {
   try {
@@ -65,7 +66,5 @@ router.post('/:postId/like', async (req, res) => {
     res.status(500).json({ message: 'Internal server error' });
   }
 });
-
-
 
 module.exports = router;
