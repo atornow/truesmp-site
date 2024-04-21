@@ -1,12 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { ProgressBar, Step } from 'react-step-progress-bar';
-import 'react-step-progress-bar/styles.css';
 
 function ChallengeRoad({ username }) {
     const [rewards, setRewards] = useState([]);
     const [points, setPoints] = useState(0);
-    const [isDonator, setIsDonator] = useState(false);
 
     useEffect(() => {
         const fetchChallengeRoadData = async () => {
@@ -14,7 +11,7 @@ function ChallengeRoad({ username }) {
                 const response = await axios.get(`http://localhost:3001/api/challenge-road/${username}`);
                 setRewards(response.data.rewards);
                 setPoints(response.data.points);
-                setIsDonator(response.data.isDonator);
+                console.log("points:", response.data.points);
             } catch (error) {
                 console.error('Error fetching challenge road data:', error);
             }
@@ -23,66 +20,121 @@ function ChallengeRoad({ username }) {
         fetchChallengeRoadData();
     }, [username]);
 
-    const totalPoints = rewards.reduce((sum, reward) => sum + reward.points, 0);
-    const progress = (points / totalPoints) * 100;
+    const maxPoints = Math.max(...rewards.map(reward => reward.points));
+    const totalWidth = maxPoints * 15; // Adjust the multiplier as needed
 
-    const isRewardUnlocked = (rewardPoints) => points >= rewardPoints;
+    const uniquePoints = [...new Set(rewards.map(reward => reward.points))];
 
     return (
-        <div style={{ paddingTop: 50, paddingBottom: 50 }}>
-            <ProgressBar
-                percent={progress}
-                filledBackground="linear-gradient(to right, #4caf50, #45a049)"
-            >
-                {rewards.map((reward, index) => (
-                    <Step
-                        key={index}
-                        position={reward.points / totalPoints}
-                        transition="scale"
-                        children={({ accomplished }) => (
-                            <div
-                                style={{
-                                    display: 'flex',
-                                    flexDirection: 'column',
-                                    alignItems: 'center',
-                                    justifyContent: 'center',
-                                    borderRadius: '50%',
-                                    width: 20,
-                                    height: 20,
-                                    color: accomplished ? 'green' : 'gray',
-                                    backgroundColor: 'white',
-                                    border: `2px solid ${accomplished ? 'green' : 'gray'}`,
-                                }}
-                            >
-                                <img
-                                    src={reward.image}
-                                    alt={reward.caption}
-                                    style={{
-                                        position: 'absolute',
-                                        top: reward.type === 'donator' ? -80 : 50,
-                                        width: 50,
-                                        height: 50,
-                                        objectFit: 'cover',
-                                        borderRadius: '50%',
-                                        border: `2px solid ${isRewardUnlocked(reward.points) ? 'green' : 'gray'}`,
-                                    }}
-                                />
-                                <span
-                                    style={{
-                                        position: 'absolute',
-                                        top: reward.type === 'donator' ? -30 : 110,
-                                        fontSize: 12,
-                                        whiteSpace: 'nowrap',
-                                        color: isRewardUnlocked(reward.points) ? 'green' : 'gray',
-                                    }}
-                                >
-                                    {reward.caption}
-                                </span>
-                            </div>
-                        )}
-                    />
-                ))}
-            </ProgressBar>
+        <div style={{ border: '1px solid #ccc', paddingTop: '10px', paddingBottom: '10px', maxWidth: '45rem', margin: '0 auto', overflow: 'hidden' }}>
+            <div style={{ width: '100%', overflowX: 'scroll' }}>
+                <div style={{ position: 'relative', height: '220px', width: totalWidth }}>
+                    <div
+                        style={{
+                            position: 'absolute',
+                            top: '50%',
+                            left: 0,
+                            height: '10px',
+                            width: '100%',
+                            backgroundColor: '#e0e0e0',
+                            transform: 'translateY(-50%)',
+                        }}
+                    >
+                        <div
+                            style={{
+                                position: 'absolute',
+                                top: 0,
+                                left: 0,
+                                height: '100%',
+                                width: `${(points / maxPoints) * 100}%`,
+                                background: 'linear-gradient(to right, #fefb72, #f0bb31)',
+                            }}
+                        />
+                    </div>
+                    {uniquePoints.map(point => (
+                        <div
+                            key={point}
+                            style={{
+                                position: 'absolute',
+                                top: '50%',
+                                left: point * 15, // Adjust the multiplier as needed
+                                transform: 'translate(-50%, -50%)',
+                                width: 25,
+                                height: 25,
+                                borderRadius: '50%',
+                                backgroundColor: points >= point ? 'gold' : 'gray',
+                                display: 'flex',
+                                justifyContent: 'center',
+                                alignItems: 'center',
+                                fontWeight: 'bold',
+                                fontSize: 12,
+                                zIndex: 2,
+                                border: '2px',
+                            }}
+                        >
+                            {point}
+                        </div>
+                    ))}
+                    {rewards.map((reward, index) => (
+                        <div
+                            key={index}
+                            style={{
+                                position: 'absolute',
+                                top: '50%',
+                                left: reward.points * 15, // Adjust the multiplier as needed
+                                transform: 'translate(-50%, -50%)',
+                                display: 'flex',
+                                flexDirection: 'column',
+                                alignItems: 'center',
+                                zIndex: 1,
+                            }}
+                        >
+                            {reward.type === 'donator' && (
+                                <div className="border doodle-border-1" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', marginBottom: '105px' }}>
+                                    <div
+                                        style={{
+                                            width: '40px',
+                                            height: '40px',
+                                            borderRadius: '50%',
+                                            overflow: 'hidden',
+                                            marginBottom: '5px',
+                                        }}
+                                    >
+                                        <img
+                                            src={reward.image}
+                                            alt={`Reward ${index + 1}`}
+                                            style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                                        />
+                                    </div>
+                                    <div style={{ fontSize: '12px', whiteSpace: 'nowrap', textAlign: 'center' }}>{reward.caption}</div>
+                                </div>
+                            )}
+                            {reward.type === 'regular' && (
+                                <div className="border doodle-border-1" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', marginTop: '105px' }}>
+                                    <div
+                                        style={{
+                                            width: '40px',
+                                            height: '40px',
+                                            borderRadius: '50%',
+                                            overflow: 'hidden',
+                                            marginBottom: '5px',
+                                        }}
+                                    >
+                                        <img
+                                            src={reward.image}
+                                            alt={`Reward ${index + 1}`}
+                                            style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                                        />
+                                    </div>
+                                    <div style={{ fontSize: '12px', whiteSpace: 'nowrap', textAlign: 'center' }}>
+                                        {reward.caption}
+                                    </div>
+                                </div>
+                            )}
+                        </div>
+                    ))}
+                </div>
+            </div>
         </div>
     );
 }

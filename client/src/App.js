@@ -66,7 +66,7 @@ function App() {
           <Route path="/events" element={<EventsPage />} />
           <Route path="/rules" element={<RulesPage />} />
           <Route path="/verify" element={<VerificationPage />} />
-          <Route path="*" element={<Navigate to="/" />} />
+          <Route path="*"  element={<Navigate to="/" />} />
           <Route
             path="/admin"
             element={

@@ -184,7 +184,7 @@ function AdminPage() {
             type="text"
             id="categoryId"
             value={categoryId}
-            onChange={(e) => setCategory(e.target.value)}
+            onChange={(e) => setCategoryId(e.target.value)}
             required
           />
         </div>
