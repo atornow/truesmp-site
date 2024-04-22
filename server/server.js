@@ -11,6 +11,7 @@ const challengeRoutes = require('./routes/challengeRoutes');
 const galleryRoutes = require('./routes/galleryRoutes');
 const adminRoutes = require('./routes/adminRoutes');
 const challengeRoadRoutes = require('./routes/challengeRoadRoutes');
+const newsRoutes = require('./routes/newsRoutes');
 const path = require('path');
 const app = express();
 const PORT = process.env.PORT || 3001;
@@ -24,6 +25,7 @@ app.use('/api/challenge-road', challengeRoadRoutes);
 app.use('/api/gallery', galleryRoutes);
 app.use('/api/admin', adminRoutes);
 app.use('/uploads', express.static(path.join(__dirname,  'uploads')));
+app.use('/api/news', newsRoutes);
 
 sequelize.sync().then(() => {
   app.listen(PORT, () => {
