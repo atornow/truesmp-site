@@ -23,25 +23,39 @@ const NewsContent = styled.p`
   font-size: 1rem;
 `;
 
+/**
+ * Renders the EventsPage component that fetches news posts from an API and displays them on the page.
+ *
+ * @returns {JSX.Element} The rendered JSX elements for the EventsPage component.
+ */
 function EventsPage() {
   const [newsPosts, setNewsPosts] = useState([]);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
     fetchNewsPosts();
   }, []);
 
+  /**
+   * Fetches the news posts from the API endpoint.
+   * If successful, updates the newsPosts state variable with the response data.
+   * If there is an error, sets the error state variable with an error message.
+   *
+   * @returns {Promise<void>}
+   */
   const fetchNewsPosts = async () => {
     try {
       const response = await axios.get('http://localhost:3001/api/news');
       setNewsPosts(response.data);
     } catch (error) {
-      console.error('Error fetching news posts:', error);
+      setError('Error fetching news posts');
     }
   };
 
   return (
     <div>
       <h2>Events</h2>
+      {error && <p>{error}</p>}
       {newsPosts.map((post) => (
         <NewsPost key={post.id}>
           {post.imageUrl && (

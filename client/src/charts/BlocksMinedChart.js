@@ -1,6 +1,7 @@
 import React from 'react';
 import { Bar } from 'react-chartjs-2';
 
+
 function BlocksMinedChart({ blocksMined, blockMap }) {
   const cachedBlocksMined = JSON.parse(localStorage.getItem('blocksMined')) || blocksMined;
   const cachedBlockMap = JSON.parse(localStorage.getItem('blockMap')) || blockMap;
@@ -83,7 +84,7 @@ function BlocksMinedChart({ blocksMined, blockMap }) {
   };
 
   return (
-    <div style={{ flex: 2, padding: '1rem', height: '400px' }}>
+    <div style={{ flex: 1, padding: '1rem', height: '80%', width: '90%'}}>
       <Bar data={chartData} options={chartOptions} />
     </div>
   );

@@ -71,7 +71,7 @@ function PlaytimeChart({ playtimes }) {
   };
 
   return (
-    <div style={{ flex: 2, padding: '1rem', height: '400px' }}>
+    <div style={{ flex: 2, padding: '1rem', height: '80%', width: '90%' }}>
       <Line data={chartDataPlay} options={chartOptions} />
     </div>
   );

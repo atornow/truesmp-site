@@ -22,27 +22,62 @@ const LogoImage = styled.img`
   position: relative;
 `;
 
+const ProfilePageContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  height: 150vh;
+
+  @media  {
+    width: 90%;
+    flex-direction: row;
+  }
+`;
+
 const PlayerInfoContainer = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  width: 30%;
   padding: 1rem;
+  margin-bottom: 1rem;
+
+  @media  {
+    width: 30%;
+    margin-bottom: 0;
+  }
 `;
 
 const WorldStatsContainer = styled.div`
-  width: 70%;
   padding: 1rem;
+
+  @media  {
+    width: 70%;
+  }
 `;
 
 const ChallengesContainer = styled.div`
   display: flex;
-  justify-content: space-between;
-  margin-bottom: 1rem;
+  flex-direction: column;
+
+  @media {
+    flex-direction: row;
+    justify-content: space-between;
+    margin-bottom: 1rem;
+  }
 `;
 
 const ChallengeSubDiv = styled.div`
-  width: 48%;
+  margin-bottom: 1rem;
+
+  @media {
+    width: 48%;
+    margin-bottom: 0;
+  }
+`;
+
+const ChartWrapper = styled.div`
+  margin-bottom: 1rem;
+  width: 100%;
+  height: 100%;
 `;
 
 function ProfilePage() {
@@ -104,15 +139,29 @@ function ProfilePage() {
 
   const currentDate = new Date();
   const nowChallenges = challenges.filter(
-      (challenge) =>
-        new Date(challenge.startDate) <= currentDate && new Date(challenge.endDate) >= currentDate
-    );
+    (challenge) =>
+      new Date(challenge.startDate) <= currentDate && new Date(challenge.endDate) >= currentDate
+  );
   const nextChallenges = challenges.filter((challenge) => new Date(challenge.startDate) > currentDate);
 
-return (
-  <div style={{ display: 'flex', flexDirection: 'row', height: '100vh' }}>
-    <WorldStatsContainer>
-      <div style={{ display: 'flex', flexDirection: 'column' }}>
+
+  return (
+    <ProfilePageContainer>
+      <PlayerInfoContainer className="border doodle-border-2">
+        <LogoImage src={AccountLogo} alt="Account Logo" className="border doodle-border-1" />
+        <h2>{username}</h2>
+        <p>Team: {teamName}</p>
+        <ChartWrapper className="border doodle-border">
+          <BlocksMinedChart blocksMined={blocksMined} blockMap={blockMap} />
+        </ChartWrapper>
+        <ChartWrapper className="border doodle-border">
+          <PlaytimeChart playtimes={playtimes} />
+        </ChartWrapper>
+        <ChartWrapper className="border doodle-border">
+          <EntitiesKilledChart entitiesKilled={entitiesKilled} entityMap={entityMap} />
+        </ChartWrapper>
+      </PlayerInfoContainer>
+      <WorldStatsContainer>
         <div className="border doodle-border-2">
           <h2>Challenges</h2>
           <ChallengesContainer>
@@ -138,29 +187,14 @@ return (
           </div>
         </div>
         <OnlinePlayerCount />
-        {topDiamondMiners.length > 0 && (
+        
           <div className="border doodle-border">
             <TopDiamondMinersChart topDiamondMiners={topDiamondMiners} />
           </div>
-        )}
-      </div>
-    </WorldStatsContainer>
-    <PlayerInfoContainer className="border doodle-border-2">
-      <LogoImage src={AccountLogo} alt="Account Logo" className="border doodle-border-1" />
-      <h2>{username}</h2>
-      <p>Team: {teamName}</p>
-      <div className="border doodle-border">
-        <BlocksMinedChart blocksMined={blocksMined} blockMap={blockMap} />
-      </div>
-      <div className="border doodle-border">
-        <PlaytimeChart playtimes={playtimes} />
-      </div>
-      <div className="border doodle-border">
-        <EntitiesKilledChart entitiesKilled={entitiesKilled} entityMap={entityMap} />
-      </div>
-    </PlayerInfoContainer>
-  </div>
-);
+        
+      </WorldStatsContainer>
+    </ProfilePageContainer>
+  );
 }
 
 export default ProfilePage;
