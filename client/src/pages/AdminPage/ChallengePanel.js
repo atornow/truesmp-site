@@ -10,6 +10,7 @@ function ChallengePanel() {
     const [categoryId, setCategoryId] = useState('');
     const [dataType, setDataType] = useState('entity');
     const [points, setPoints] = useState(0);
+    const [blockAction, setBlockAction] = useState('mined');
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -23,6 +24,7 @@ function ChallengePanel() {
                 categoryId,
                 dataType,
                 points,
+                blockAction: dataType === 'block' ? blockAction : null,
             });
             // Reset form fields and show success message
             setDescription('');
@@ -87,6 +89,20 @@ function ChallengePanel() {
                         required
                     />
                 </div>
+                {dataType === 'block' && (
+                    <div>
+                        <label htmlFor="blockAction">Block Action:</label>
+                        <select
+                            id="blockAction"
+                            value={blockAction}
+                            onChange={(e) => setBlockAction(e.target.value)}
+                            required
+                        >
+                            <option value="mined">Mined</option>
+                            <option value="placed">Placed</option>
+                        </select>
+                    </div>
+                )}
                 <div>
                     <label htmlFor="startDate">Start Date:</label>
                     <input
