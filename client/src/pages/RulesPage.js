@@ -33,6 +33,7 @@ const RuleDescription = styled.p`
 const ModContainer = styled.div`
   padding-left: 5rem;
   padding-right: 5rem;
+  margin: 5rem;
 `;
 
 const ModList = styled.ul`
@@ -44,7 +45,7 @@ const ModList = styled.ul`
 `;
 
 const ModItem = styled.li`
-  margin-bottom: 0.5rem;
+  margin-bottom: 1rem;
 `;
 
 const ModLink = styled.a`

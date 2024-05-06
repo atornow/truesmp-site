@@ -25,10 +25,10 @@ const LogoImage = styled.img`
 const ProfilePageContainer = styled.div`
   display: flex;
   flex-direction: column;
-  height: 150vh;
+  height: 100%;
+  width: 95%;
 
-  @media  {
-    width: 90%;
+  @media (min-width: 768px) {
     flex-direction: row;
   }
 `;
@@ -40,16 +40,16 @@ const PlayerInfoContainer = styled.div`
   padding: 1rem;
   margin-bottom: 1rem;
 
-  @media  {
+  @media (min-width: 768px) {
     width: 30%;
-    margin-bottom: 0;
+    height: 100%;
   }
 `;
 
 const WorldStatsContainer = styled.div`
   padding: 1rem;
 
-  @media  {
+  @media (min-width: 768px) {
     width: 70%;
   }
 `;
@@ -58,7 +58,7 @@ const ChallengesContainer = styled.div`
   display: flex;
   flex-direction: column;
 
-  @media {
+  @media (min-width: 768px) {
     flex-direction: row;
     justify-content: space-between;
     margin-bottom: 1rem;
@@ -68,16 +68,25 @@ const ChallengesContainer = styled.div`
 const ChallengeSubDiv = styled.div`
   margin-bottom: 1rem;
 
-  @media {
+  @media (min-width: 768px) {
     width: 48%;
     margin-bottom: 0;
   }
 `;
 
 const ChartWrapper = styled.div`
-  margin-bottom: 1rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   width: 100%;
-  height: 100%;
+  height: 20%;
+  margin-bottom: 1rem;
+  @media (max-width: 768px) {
+    body {
+      font-size: 14px;
+      height: 80%;
+
+    }
 `;
 
 function ProfilePage() {

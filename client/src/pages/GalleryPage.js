@@ -81,7 +81,7 @@ function GalleryPage() {
         />
         <button type="submit">Post</button>
       </form>
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '1rem' }}>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '1rem', width: '100%' }}>
         {galleryPosts.map((post) => (
           <div key={post.id} style={{ border: '1px solid #ccc', padding: '1rem' }}>
             <img src={`http://localhost:3001/uploads/${post.imageUrl}`} alt={post.caption} style={{ width: '100%', height: 'auto' }} />

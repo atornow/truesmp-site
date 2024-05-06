@@ -83,7 +83,7 @@ function EntitiesKilledChart({ entitiesKilled, entityMap }) {
   };
 
   return (
-    <div style={{ flex: 2, padding: '1rem', height: '80%', width: '90%' }}>
+    <div style={{ flex: 2, padding: '1rem', height: '100%', width: '90%' }}>
       <Bar data={chartData} options={chartOptions} />
     </div>
   );

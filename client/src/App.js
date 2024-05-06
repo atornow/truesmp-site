@@ -18,6 +18,16 @@ const GlobalStyle = createGlobalStyle`
   body {
     font-family: 'Xkcd', cursive;
     text-align: center;
+    margin: 0;
+    padding: 0;
+  }
+
+  @media (max-width: 768px) {
+    body {
+      font-size: 14px;
+      width: 100%;
+
+    }
   }
 `;
 
@@ -28,6 +38,11 @@ const AppContainer = styled.div`
   justify-content: flex-start;
   min-height: 100vh;
   padding-top: 60px;
+
+  @media (max-width: 768px) {
+    padding-top: 40px;
+    
+  }
 `;
 
 function App() {
