@@ -16,8 +16,6 @@ module.exports = () => {
         });
         if (created) {
           console.log(`Created user entry for ${username}`);
-          const currentDate = new Date().toISOString().split('T')[0];
-          const lastUpdateDate = user.lastUpdate.toISOString().split('T')[0];
           const currentTime = Math.floor(Date.now() / 1000);
           const lastUpdateTime = Math.floor(user.lastUpdate.getTime() / 1000);
           const lookback = currentTime - lastUpdateTime;

@@ -12,7 +12,6 @@ module.exports = () => {
     const allUsers = await users.findAll();
     const updatePromises = allUsers.map(async (user) => {
       if (!user.username.startsWith('#')) {
-        const currentDate = new Date().toISOString().split('T')[0];
         const lastUpdateDate = user.lastUpdate.toISOString().split('T')[0];
         const updatedPlaytimes = await updatePlaytimes(user.username, lastUpdateDate, user.playtimes);
 
