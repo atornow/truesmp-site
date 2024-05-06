@@ -12,7 +12,9 @@ async function updateChallengeProgress(challengeId) {
 
     const currentProgress = challenge.dataType === 'entity'
       ? user.entitiesKilled[dataIndex + 1] || 0
-      : user.blocksMined[dataIndex + 1] || 0;
+      : challenge.blockAction === 'placed'
+        ? user.blocksPlaced[dataIndex + 1] || 0
+        : user.blocksMined[dataIndex + 1] || 0;
     const progressDifference = currentProgress - challenge.initialProgress;
 
     if (progressDifference >= challenge.amountGoal) {
