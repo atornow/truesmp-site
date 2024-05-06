@@ -46,6 +46,10 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.STRING,
       allowNull: false,
     },
+    blockAction: {
+      type: DataTypes.STRING,
+      allowNull: true,
+    },
   });
 
   return Challenge;
