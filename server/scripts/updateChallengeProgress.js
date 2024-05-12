@@ -5,7 +5,9 @@ const { fetchBlockNames } = require('./fetchBlockNames');
 async function updateChallengeProgress(challengeId) {
   try {
     const challenge = await challenges.findByPk(challengeId);
-    const user = await users.findOne({ where: { username: challenge.targetUsername } });
+    const currentDate = new Date();
+    if (currentDate >= new Date(challenge.startDate) && currentDate <= new Date(challenge.endDate)) {
+      const user = await users.findOne({ where: { username: challenge.targetUsername } });
 
     const dataMap = challenge.dataType === 'entity' ? await fetchEntityNames() : await fetchBlockNames();
     const dataIndex = dataMap.indexOf(challenge.dataName);
@@ -24,6 +26,7 @@ async function updateChallengeProgress(challengeId) {
     }
 
     await challenge.update({ currentProgress: progressDifference });
+  }
   } catch (error) {
     console.error('Error updating challenge progress:', error);
     throw error;

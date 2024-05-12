@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const { users } = require('../models');
+const { challenges } = require('../models')
 const bcrypt = require('bcrypt');
 const crypto = require('crypto');
 const jwt = require('jsonwebtoken');
@@ -10,6 +11,8 @@ const { getStats } = require('../scripts/StatsCalculator');
 const { updatePlaytimes } = require('../scripts/PlaytimeCalculator');
 const { fetchTeamName } = require('../scripts/fetchTeamName');
 const { coreProtectPool } = require('../db');
+const { updateChallengeProgress } = require('../scripts/updateChallengeProgress');
+const { Op } = require('sequelize');
 
 // Registration endpoint, generates token and expiration time and creates temp user.
 router.post('/register', async (req, res) => {
@@ -115,6 +118,16 @@ router.post('/login', async (req, res) => {
       const teamName = await fetchTeamName(user.uuid);
       console.log('Login - teamName:', teamName);
       const uuid = user.uuid;
+      const currentDate = new Date();
+      const userChallenges = await challenges.findAll({
+        where: {
+          targetUsername: username,
+          startDate: { [Op.lte]: currentDate },
+          endDate: { [Op.gte]: currentDate },
+        }, });
+      for (const challenge of userChallenges) {
+        await updateChallengeProgress(challenge.id);
+      }
       res.json({ message: "Login successful", token, teamName, uuid });
     } else {
       res.status(401).send('Invalid username or password');
@@ -142,7 +155,6 @@ async function fetchUUIDFromCoreProtect(username) {
 }
 
 async function updateUserStats(user) {
-  const currentDate = new Date().toISOString().split('T')[0];
   const lastUpdateDate = user.lastUpdate.toISOString().split('T')[0];
   const updatedPlaytimes = await updatePlaytimes(user.username, lastUpdateDate, user.playtimes);
 
