@@ -87,6 +87,7 @@ const ChartWrapper = styled.div`
       height: 80%;
 
     }
+  }
 `;
 
 function ProfilePage() {
