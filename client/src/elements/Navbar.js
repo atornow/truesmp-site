@@ -67,13 +67,13 @@ function Navbar() {
       <LogoLink to="/">
         <Logo src={logo} alt="Logo" />
       </LogoLink>
-      <NavLink to="/" active={location.pathname === '/'}>Home</NavLink>
-      <NavLink to="/events" active={location.pathname === '/events'}>Events</NavLink>
-      <NavLink to="/gallery" active={location.pathname === '/gallery'}>Gallery</NavLink>
-      <NavLink to="/rules" active={location.pathname === '/rules'}>Rules</NavLink>
-      {isAuthenticated && <LogoutButton onClick={handleLogout}>Log Out</LogoutButton>}
+      <NavLink to="/" active={location.pathname === '/'}>HOME</NavLink>
+      <NavLink to="/events" active={location.pathname === '/events'}>EVENTS</NavLink>
+      <NavLink to="/gallery" active={location.pathname === '/gallery'}>GALLERY</NavLink>
+      <NavLink to="/rules" active={location.pathname === '/rules'}>RULES</NavLink>
+      {isAuthenticated && <LogoutButton onClick={handleLogout}>LOG OUT</LogoutButton>}
       {isAuthenticated && username === 'RamenLover' && (
-        <NavLink to="/admin" active={location.pathname === '/admin'}>Admin</NavLink>
+        <NavLink to="/admin" active={location.pathname === '/admin'}>ADMIN</NavLink>
       )}
     </Nav>
   );
