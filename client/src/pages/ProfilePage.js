@@ -12,6 +12,7 @@ import { AuthContext } from '../contexts/AuthContext';
 import ChallengeProgress from '../elements/ChallengeProgress';
 import OnlinePlayerCount from '../elements/OnlinePlayerCount';
 import ChallengeRoad from '../elements/ChallengeRoad';
+import ProfileBanner from '../elements/ProfileBanner';
 
 ChartJS.register(CategoryScale);
 
@@ -26,10 +27,11 @@ const ProfilePageContainer = styled.div`
   display: flex;
   flex-direction: column;
   height: 100%;
-  width: 95%;
+  width: 90%;
+  align-items:center;
 
   @media (min-width: 768px) {
-    flex-direction: row;
+    flex-direction: column;
   }
 `;
 
@@ -87,6 +89,16 @@ const ChartWrapper = styled.div`
       height: 80%;
 
     }
+  }
+`;
+
+const ContentContainer = styled.div`
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+
+  @media (max-width: 768px) {
+    flex-direction: column;
   }
 `;
 
@@ -157,6 +169,8 @@ function ProfilePage() {
 
   return (
     <ProfilePageContainer>
+      <ProfileBanner />
+      <ContentContainer>
       <PlayerInfoContainer className="border doodle-border-2">
         <LogoImage src={AccountLogo} alt="Account Logo" className="border doodle-border-1" />
         <h2>{username}</h2>
@@ -203,6 +217,7 @@ function ProfilePage() {
           </div>
         
       </WorldStatsContainer>
+      </ContentContainer>
     </ProfilePageContainer>
   );
 }
