@@ -27,20 +27,6 @@ const ProgressTick = styled.div`
   transform: translateX(-50%);
   font-size: 12px;
   white-space: nowrap;
-
-  &:hover::after {
-    content: "${props => props.tooltip}";
-    position: absolute;
-    top: -25px;
-    left: 50%;
-    transform: translateX(-50%);
-    background-color: rgba(0, 0, 0, 0.8);
-    color: white;
-    padding: 5px;
-    border-radius: 5px;
-    font-size: 12px;
-    white-space: nowrap;
-  }
 `;
 
 function formatDate(dateString) {
@@ -79,10 +65,9 @@ function ChallengeProgress({ challenge }) {
           <ProgressFill style={{ width: `${progressPercentage}%` }} />
         </ProgressBar>
         <ProgressTick
-          style={{ left: `${progressPercentage}%`, transform: `translateX(-50%)` }}
-          tooltip={`${challenge.currentProgress} out of ${challenge.amountGoal}`}
+          style={{ left: `${progressPercentage}%`}}
         >
-          {challenge.currentProgress}
+          {`${challenge.currentProgress}/${challenge.amountGoal}`}
         </ProgressTick>
       </ProgressBarContainer>
       <p>
