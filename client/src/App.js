@@ -14,6 +14,8 @@ import VerificationPage from './pages/VerificationPage';
 import { AuthContext } from './contexts/AuthContext';
 import './css/doodle-css/doodle.css';
 
+
+// Test change for release
 const GlobalStyle = createGlobalStyle`
   body {
     font-family: 'Xkcd', cursive;
