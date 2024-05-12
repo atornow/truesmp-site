@@ -49,7 +49,7 @@ const PlayerInfoContainer = styled.div`
 `;
 
 const WorldStatsContainer = styled.div`
-  padding: 1rem;
+  padding-left: 1rem;
 
   @media (min-width: 768px) {
     width: 70%;

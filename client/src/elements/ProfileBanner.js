@@ -9,6 +9,7 @@ const BannerContainer = styled.div`
   height: 100px;
   background-color: #f0f0f0;
   margin-bottom: 1rem;
+  box-sizing: border-box;
 
   @media (max-width: 768px) {
     height: 80px;
