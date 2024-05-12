@@ -4,6 +4,10 @@ import { Bar } from 'react-chartjs-2';
 function TopDiamondMinersChart({ topDiamondMiners }) {
   const cachedTopDiamondMiners = JSON.parse(localStorage.getItem('topDiamondMiners'));
 
+  if (!cachedTopDiamondMiners || !Array.isArray(cachedTopDiamondMiners)) {
+    return <div>No data available</div>;
+  }
+
   const labels = cachedTopDiamondMiners.map((miner) => miner.username);
   const data = cachedTopDiamondMiners.map((miner) => miner.diamondsMined);
   console.log('Size check:', labels);
