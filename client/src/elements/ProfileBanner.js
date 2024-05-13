@@ -30,7 +30,7 @@ const BannerColorBox = styled.div`
   left: -8px;
   right: -8px;
   bottom: -8px;
-  background-color: #FFAA00;
+  background-color: #e0e0e0;
   box-sizing: border-box;
   border-radius: 7px;
 
