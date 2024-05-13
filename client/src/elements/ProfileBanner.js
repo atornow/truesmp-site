@@ -10,6 +10,8 @@ const BannerContainer = styled.div`
   background-color: #f0f0f0;
   margin-bottom: 1rem;
   box-sizing: border-box;
+  border-radius: 10px;
+  overflow: hidden;
 
   @media (max-width: 768px) {
     height: 80px;
