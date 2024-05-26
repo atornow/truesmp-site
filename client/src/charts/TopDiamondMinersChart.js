@@ -64,7 +64,7 @@ function TopDiamondMinersChart({ topDiamondMiners }) {
   };
 
   return (
-    <div style={{ flex: 2, padding: '1rem', height: '400px' }}>
+    <div style={{ flex: 2, padding: '1rem', height: '400px', width: '90%' }}>
       <Bar data={chartData} options={chartOptions} />
     </div>
   );
