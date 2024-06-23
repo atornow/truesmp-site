@@ -2,15 +2,43 @@ const express = require('express');
 const router = express.Router();
 const { challenges, galleryPosts, users, challengeRoads } = require('../models');
 const { Op } = require('sequelize');
+const multer = require('multer');
+const path = require('path');
+
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, 'uploads/challengeroad');
+  },
+  filename: function (req, file, cb) {
+    cb(null, Date.now() + path.extname(file.originalname));
+  },
+});
+
+const upload = multer({ storage: storage });
 
 router.post('/challenge-road', async (req, res) => {
   try {
     const { category, rewards } = req.body;
-    const challengeRoad = await challengeRoads.create({ rewards, categoryId: category });
+    const challengeRoad = await challengeRoads.create({
+      rewards: rewards.map(reward => ({
+        ...reward,
+        command: reward.command || '' // Ensure command is included
+      })),
+      categoryId: category
+    });
     res.status(201).json(challengeRoad);
   } catch (error) {
     console.error('Error creating challenge road:', error);
     res.status(500).json({ message: 'Internal server error' });
+  }
+});
+
+
+router.post('/challenge-road/upload-image', upload.single('image'), (req, res) => {
+  if (req.file) {
+    res.json({ filePath: `uploads/challengeroad/${req.file.filename}` });
+  } else {
+    res.status(400).json({ message: 'No file uploaded' });
   }
 });
 
