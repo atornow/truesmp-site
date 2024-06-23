@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+import { useDropzone } from 'react-dropzone';
 
 function ChallengeRoadPanel() {
     const [regularRewardsCount, setRegularRewardsCount] = useState(0);
@@ -8,30 +9,52 @@ function ChallengeRoadPanel() {
     const [regularRewards, setRegularRewards] = useState([]);
     const [donatorRewards, setDonatorRewards] = useState([]);
 
+    const validateRewardsCount = (count) => {
+        const parsedCount = parseInt(count);
+        return isNaN(parsedCount) || parsedCount < 0 ? 0 : parsedCount;
+    };
+
     const handleRegularRewardChange = (index, field, value) => {
-        const updatedRewards = [...regularRewards];
-        updatedRewards[index] = { ...updatedRewards[index], [field]: value };
-        setRegularRewards(updatedRewards);
+        setRegularRewards(prevRewards => {
+            const newRewards = [...prevRewards];
+            newRewards[index] = { ...newRewards[index], [field]: value };
+            return newRewards;
+        });
     };
 
     const handleDonatorRewardChange = (index, field, value) => {
-        const updatedRewards = [...donatorRewards];
-        updatedRewards[index] = { ...updatedRewards[index], [field]: value };
-        setDonatorRewards(updatedRewards);
+        setDonatorRewards(prevRewards => {
+            const newRewards = [...prevRewards];
+            newRewards[index] = { ...newRewards[index], [field]: value };
+            return newRewards;
+        });
+    };
+
+    const handleImageUpload = async (file, rewardType, index) => {
+        const formData = new FormData();
+        formData.append('image', file);
+
+        try {
+            const response = await axios.post('http://localhost:3001/api/admin/challenge-road/upload-image', formData, {
+                headers: { 'Content-Type': 'multipart/form-data' },
+            });
+
+            if (rewardType === 'regular') {
+                handleRegularRewardChange(index, 'image', response.data.filePath);
+            } else {
+                handleDonatorRewardChange(index, 'image', response.data.filePath);
+            }
+        } catch (error) {
+            console.error('Error uploading image:', error);
+        }
     };
 
     const handleChallengeRoadSubmit = async (e) => {
         e.preventDefault();
         try {
             const rewards = [
-                ...regularRewards.map((reward, index) => ({
-                    ...reward,
-                    type: `regular`,
-                })),
-                ...donatorRewards.map((reward, index) => ({
-                    ...reward,
-                    type: `donator`,
-                })),
+                ...regularRewards.map(reward => ({ ...reward, type: 'regular' })),
+                ...donatorRewards.map(reward => ({ ...reward, type: 'donator' })),
             ];
 
             const data = {
@@ -42,18 +65,31 @@ function ChallengeRoadPanel() {
             };
 
             await axios.post('http://localhost:3001/api/admin/challenge-road', data);
-            // Show success message
             alert('Challenge road created successfully!');
         } catch (error) {
             console.error('Error creating challenge road:', error);
-            // Show error message
             alert('Error creating challenge road. Please try again.');
         }
     };
 
-    const validateRewardsCount = (count) => {
-        const parsedCount = parseInt(count);
-        return isNaN(parsedCount) || parsedCount < 0 ? 0 : parsedCount;
+    const ImageUploader = ({ onUpload, currentImage }) => {
+        const { getRootProps, getInputProps } = useDropzone({
+            accept: 'image/*',
+            onDrop: acceptedFiles => {
+                onUpload(acceptedFiles[0]);
+            },
+        });
+
+        return (
+            <div {...getRootProps()} style={{ backgroundColor: '#f8f8f8', padding: '10px', textAlign: 'center', margin: '10px'}} className="doodle doodle-border-2">
+                <input {...getInputProps()} />
+                {currentImage ? (
+                    <img src={`http://localhost:3001/${currentImage}`} alt="Reward" style={{ maxWidth: '50px', maxHeight: '100px' }} />
+                ) : (
+                    <p>Drag or select a file</p>
+                )}
+            </div>
+        );
     };
 
     return (
@@ -67,7 +103,11 @@ function ChallengeRoadPanel() {
                         id="regularRewardsCount"
                         min="0"
                         value={regularRewardsCount}
-                        onChange={(e) => setRegularRewardsCount(validateRewardsCount(e.target.value))}
+                        onChange={(e) => {
+                            const newCount = validateRewardsCount(e.target.value);
+                            setRegularRewardsCount(newCount);
+                            setRegularRewards(Array(newCount).fill().map(() => ({})));
+                        }}
                         required
                     />
                 </div>
@@ -78,7 +118,11 @@ function ChallengeRoadPanel() {
                         id="donatorRewardsCount"
                         min="0"
                         value={donatorRewardsCount}
-                        onChange={(e) => setDonatorRewardsCount(validateRewardsCount(e.target.value))}
+                        onChange={(e) => {
+                            const newCount = validateRewardsCount(e.target.value);
+                            setDonatorRewardsCount(newCount);
+                            setDonatorRewards(Array(newCount).fill().map(() => ({})));
+                        }}
                         required
                     />
                 </div>
@@ -93,26 +137,31 @@ function ChallengeRoadPanel() {
                         required
                     />
                 </div>
-                {[...Array(regularRewardsCount)].map((_, index) => (
-                    <div key={`regular-${index}`}>
+
+                {regularRewards.map((reward, index) => (
+                    <div key={`regular-${index}`} className="doodle doodle-border-2" style={{margin: '10px'}}>
                         <h4>Regular Reward {index + 1}</h4>
-                        <div>
-                            <label htmlFor={`regular-image-${index}`}>Image URL:</label>
-                            <input
-                                type="text"
-                                id={`regular-image-${index}`}
-                                value={regularRewards[index]?.image || ''}
-                                onChange={(e) => handleRegularRewardChange(index, 'image', e.target.value)}
-                                required
-                            />
-                        </div>
+                        <ImageUploader
+                            onUpload={(file) => handleImageUpload(file, 'regular', index)}
+                            currentImage={reward.image}
+                        />
                         <div>
                             <label htmlFor={`regular-caption-${index}`}>Caption:</label>
                             <input
                                 type="text"
                                 id={`regular-caption-${index}`}
-                                value={regularRewards[index]?.caption || ''}
+                                value={reward.caption || ''}
                                 onChange={(e) => handleRegularRewardChange(index, 'caption', e.target.value)}
+                                required
+                            />
+                        </div>
+                        <div>
+                            <label htmlFor={`regular-command-${index}`}>Command:</label>
+                            <input
+                                type="text"
+                                id={`regular-command-${index}`}
+                                value={reward.command || ''}
+                                onChange={(e) => handleRegularRewardChange(index, 'command', e.target.value)}
                                 required
                             />
                         </div>
@@ -121,33 +170,38 @@ function ChallengeRoadPanel() {
                             <input
                                 type="number"
                                 id={`regular-points-${index}`}
-                                value={regularRewards[index]?.points || ''}
+                                value={reward.points || ''}
                                 onChange={(e) => handleRegularRewardChange(index, 'points', parseInt(e.target.value))}
                                 required
                             />
                         </div>
                     </div>
                 ))}
-                {[...Array(donatorRewardsCount)].map((_, index) => (
+
+                {donatorRewards.map((reward, index) => (
                     <div key={`donator-${index}`}>
                         <h4>Donator Reward {index + 1}</h4>
-                        <div>
-                            <label htmlFor={`donator-image-${index}`}>Image URL:</label>
-                            <input
-                                type="text"
-                                id={`donator-image-${index}`}
-                                value={donatorRewards[index]?.image || ''}
-                                onChange={(e) => handleDonatorRewardChange(index, 'image', e.target.value)}
-                                required
-                            />
-                        </div>
+                        <ImageUploader
+                            onUpload={(file) => handleImageUpload(file, 'donator', index)}
+                            currentImage={reward.image}
+                        />
                         <div>
                             <label htmlFor={`donator-caption-${index}`}>Caption:</label>
                             <input
                                 type="text"
                                 id={`donator-caption-${index}`}
-                                value={donatorRewards[index]?.caption || ''}
+                                value={reward.caption || ''}
                                 onChange={(e) => handleDonatorRewardChange(index, 'caption', e.target.value)}
+                                required
+                            />
+                        </div>
+                        <div>
+                            <label htmlFor={`donator-command-${index}`}>Command:</label>
+                            <input
+                                type="text"
+                                id={`donator-command-${index}`}
+                                value={reward.command || ''}
+                                onChange={(e) => handleDonatorRewardChange(index, 'command', e.target.value)}
                                 required
                             />
                         </div>
@@ -156,13 +210,14 @@ function ChallengeRoadPanel() {
                             <input
                                 type="number"
                                 id={`donator-points-${index}`}
-                                value={donatorRewards[index]?.points || ''}
+                                value={reward.points || ''}
                                 onChange={(e) => handleDonatorRewardChange(index, 'points', parseInt(e.target.value))}
                                 required
                             />
                         </div>
                     </div>
                 ))}
+
                 <button type="submit">Create Challenge Road</button>
             </form>
         </div>
